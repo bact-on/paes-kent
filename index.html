@@ -7,12 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Estilos personalizados y para la fuente Inter */
+        /* Estilos personalizados y para la fuente Poppins */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8F7FC;
+            font-family: 'Poppins', sans-serif;
+            background-color: #fafcff;
         }
         /* Estilo para los placeholders de los inputs */
         ::placeholder {
@@ -41,6 +41,26 @@
         .hidden {
             display: none;
         }
+        /* Colores personalizados */
+        .accent-text { color: #015ad6; }
+        .accent-bg { background-color: #015ad6; }
+        .accent-ring:focus { ring-color: #015ad6; }
+        .clec-bg { background-color: #eb2d32; }
+        .m1-bg { background-color: #015ad6; }
+        .cie-bg { background-color: #009f58; }
+        .hcs-bg { background-color: #5e17eb; }
+        .m2-bg { background-color: #1287d1; }
+
+        .clec-bg-light { background-color: rgba(235, 45, 50, 0.1); }
+        .clec-text-dark { color: #9b1c20; }
+        .m1-bg-light { background-color: rgba(1, 90, 214, 0.1); }
+        .m1-text-dark { color: #01449d; }
+        .cie-bg-light { background-color: rgba(0, 159, 88, 0.1); }
+        .cie-text-dark { color: #00693b; }
+        .hcs-bg-light { background-color: rgba(94, 23, 235, 0.1); }
+        .hcs-text-dark { color: #4311a9; }
+        .m2-bg-light { background-color: rgba(18, 135, 209, 0.1); }
+        .m2-text-dark { color: #0c639c; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -49,7 +69,7 @@
 
         <!-- Título Principal -->
         <header class="text-center">
-            <h1 class="text-4xl font-extrabold text-pink-500">Simulador PAES Kent</h1>
+            <h1 class="text-4xl font-extrabold accent-text">Simulador PAES Kent</h1>
         </header>
 
         <main class="space-y-10">
@@ -57,17 +77,17 @@
             <section id="nem-section">
                 <h2 class="text-xl font-bold mb-4">1. Ingresa tus promedios <span class="font-normal text-gray-500">(reales o imaginarios)</span></h2>
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <input type="number" id="nem1" placeholder="I° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-pink-400 focus:outline-none">
-                    <input type="number" id="nem2" placeholder="II° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-pink-400 focus:outline-none">
-                    <input type="number" id="nem3" placeholder="III° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-pink-400 focus:outline-none">
-                    <input type="number" id="nem4" placeholder="IV° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-pink-400 focus:outline-none">
+                    <input type="number" id="nem1" placeholder="I° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
+                    <input type="number" id="nem2" placeholder="II° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
+                    <input type="number" id="nem3" placeholder="III° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
+                    <input type="number" id="nem4" placeholder="IV° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
                 </div>
                 <div id="nem-error" class="text-red-500 text-sm text-center mb-4 hidden">
                     <span class="font-bold">▲</span> Entrada inválida
                 </div>
                 <div class="text-center text-gray-600">
-                    <p>Según lo ingresado, tu NEM sería de <strong id="nem-result" class="text-pink-500">...</strong> puntos*</p>
-                    <p>Y tu Ranking sería de <strong id="ranking-result" class="text-pink-500">...</strong> puntos*</p>
+                    <p>Según lo ingresado, tu NEM sería de <strong id="nem-result" class="accent-text">...</strong> puntos*</p>
+                    <p>Y tu Ranking sería de <strong id="ranking-result" class="accent-text">...</strong> puntos*</p>
                     <p class="text-xs text-gray-400 mt-2">*Datos para la generación que egresa el 2025.</p>
                 </div>
             </section>
@@ -78,7 +98,7 @@
                     <div class="flex-1 pr-4">
                         <h2 class="text-xl font-bold mb-4">2. Elige una carrera</h2>
                         <div class="relative">
-                            <input type="text" id="career-input" placeholder="Escribe aquí una carrera" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                            <input type="text" id="career-input" placeholder="Escribe aquí una carrera" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
                             <div id="career-list" class="hidden"></div>
                         </div>
                         <p class="text-xs text-gray-400 mt-2 text-center">Ues disponibles: PUC – UCH – UANDES – UDD – UAI – UDP – UNAB – USACH – MAYOR – FINIS – USS</p>
@@ -86,11 +106,11 @@
                     <div class="text-center">
                         <h3 class="text-lg font-bold mb-2">Ponderaciones</h3>
                         <div class="grid grid-cols-2 gap-2 text-white text-sm">
-                            <div id="pond-clec" class="p-3 bg-red-500 rounded-lg shadow">C.LEC<br><strong class="text-xl">...</strong></div>
-                            <div id="pond-m1" class="p-3 bg-blue-500 rounded-lg shadow">M1<br><strong class="text-xl">...</strong></div>
-                            <div id="pond-cie" class="p-3 bg-green-500 rounded-lg shadow">CIE<br><strong class="text-xl">...</strong></div>
-                            <div id="pond-hcs" class="p-3 bg-purple-500 rounded-lg shadow">HCS<br><strong class="text-xl">...</strong></div>
-                            <div id="pond-m2" class="p-3 bg-cyan-500 rounded-lg shadow col-span-2">M2<br><strong class="text-xl">...</strong></div>
+                            <div id="pond-clec" class="p-3 clec-bg rounded-lg shadow"><strong class="font-bold">C.LEC</strong><br><span class="text-xl font-bold">...</span></div>
+                            <div id="pond-m1" class="p-3 m1-bg rounded-lg shadow"><strong class="font-bold">M1</strong><br><span class="text-xl font-bold">...</span></div>
+                            <div id="pond-cie" class="p-3 cie-bg rounded-lg shadow"><strong class="font-bold">CIE</strong><br><span class="text-xl font-bold">...</span></div>
+                            <div id="pond-hcs" class="p-3 hcs-bg rounded-lg shadow"><strong class="font-bold">HCS</strong><br><span class="text-xl font-bold">...</span></div>
+                            <div id="pond-m2" class="p-3 m2-bg rounded-lg shadow col-span-2"><strong class="font-bold">M2</strong><br><span class="text-xl font-bold">...</span></div>
                         </div>
                     </div>
                 </div>
@@ -100,25 +120,25 @@
             <section id="paes-section">
                 <h2 class="text-xl font-bold mb-4">3. Ingresa puntajes PAES <span class="font-normal text-gray-500">(reales o imaginarios)</span></h2>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-pink-100 p-4 rounded-2xl text-center">
-                        <label for="paes-clec" class="font-bold text-pink-800">C. LECTORA</label>
+                    <div class="clec-bg-light p-4 rounded-2xl text-center">
+                        <label for="paes-clec" class="font-bold clec-text-dark">C. LECTORA</label>
                         <input type="number" id="paes-clec" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
                     </div>
-                    <div class="bg-blue-100 p-4 rounded-2xl text-center">
-                        <label for="paes-m1" class="font-bold text-blue-800">MATEMÁTICA 1</label>
+                    <div class="m1-bg-light p-4 rounded-2xl text-center">
+                        <label for="paes-m1" class="font-bold m1-text-dark">MATEMÁTICA 1</label>
                         <input type="number" id="paes-m1" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
                     </div>
-                     <div class="bg-cyan-100 p-4 rounded-2xl text-center">
-                        <label for="paes-m2" class="font-bold text-cyan-800">MATEMÁTICA 2</label>
-                        <input type="number" id="paes-m2" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
-                    </div>
-                    <div class="bg-green-100 p-4 rounded-2xl text-center">
-                        <label for="paes-cie" class="font-bold text-green-800">CIENCIAS</label>
+                    <div class="cie-bg-light p-4 rounded-2xl text-center">
+                        <label for="paes-cie" class="font-bold cie-text-dark">CIENCIAS</label>
                         <input type="number" id="paes-cie" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
                     </div>
-                    <div class="bg-purple-100 p-4 rounded-2xl text-center col-span-2">
-                        <label for="paes-hcs" class="font-bold text-purple-800">HISTORIA Y CS. SOC.</label>
+                    <div class="hcs-bg-light p-4 rounded-2xl text-center">
+                        <label for="paes-hcs" class="font-bold hcs-text-dark">HISTORIA Y CS. SOC.</label>
                         <input type="number" id="paes-hcs" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
+                    </div>
+                    <div class="m2-bg-light p-4 rounded-2xl text-center col-span-2">
+                        <label for="paes-m2" class="font-bold m2-text-dark">MATEMÁTICA 2</label>
+                        <input type="number" id="paes-m2" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
                     </div>
                 </div>
             </section>
@@ -127,10 +147,10 @@
             <section id="results-section" class="text-center bg-white p-6 rounded-2xl shadow-md">
                 <h2 class="text-2xl font-bold mb-4">Resultados de la Simulación</h2>
                 <div class="space-y-4 text-gray-700">
-                    <p>El último puntaje de corte para esta carrera fue de <strong id="corte-result" class="text-blue-600 text-lg">...</strong> puntos.</p>
-                    <p>Solo con lo que has ingresado, ponderarías <strong id="ponderado-result" class="text-blue-600 text-lg">...</strong> puntos.</p>
-                    <p>Considerando solo tu NEM y Ranking, tendrías que sacar en promedio <strong id="promedio-paes-nem-result" class="text-blue-600 text-lg">...</strong> puntos para superar el corte.</p>
-                    <p>Considerando los puntajes que ingresaste, tendrías que sacar en promedio <strong id="promedio-paes-resto-result" class="text-blue-600 text-lg">...</strong> puntos en el resto de pruebas para superar el corte.</p>
+                    <p>El último puntaje de corte para esta carrera fue de <strong id="corte-result" class="accent-text text-lg">...</strong> puntos.</p>
+                    <p>Solo con lo que has ingresado, ponderarías <strong id="ponderado-result" class="accent-text text-lg">...</strong> puntos.</p>
+                    <p>Considerando solo tu NEM y Ranking, tendrías que sacar en promedio <strong id="promedio-paes-nem-result" class="accent-text text-lg">...</strong> puntos para superar el corte.</p>
+                    <p>Considerando los puntajes que ingresaste, tendrías que sacar en promedio <strong id="promedio-paes-resto-result" class="accent-text text-lg">...</strong> puntos en el resto de pruebas para superar el corte.</p>
                 </div>
             </section>
         </main>
@@ -143,11 +163,11 @@
             // Aquí iría la lista de carreras que cargarás desde un CSV.
             // Por ahora, usamos datos de ejemplo.
             const careersData = [
-                { name: 'Ingeniería Civil PUC', university: 'PUC', cut: 780, weights: { nem: 10, ranking: 25, clec: 10, m1: 45, m2: 0, cie: 10, hcs: 0 } },
+                { name: 'Ingeniería Civil PUC', university: 'PUC', cut: 780, weights: { nem: 10, ranking: 25, clec: 10, m1: 45, m2: 10, cie: 0, hcs: 0 } },
                 { name: 'Derecho UCH', university: 'UCH', cut: 720, weights: { nem: 20, ranking: 30, clec: 30, m1: 10, m2: 0, cie: 0, hcs: 10 } },
                 { name: 'Medicina UANDES', university: 'UANDES', cut: 810, weights: { nem: 10, ranking: 20, clec: 15, m1: 25, m2: 10, cie: 20, hcs: 0 } },
                 { name: 'Psicología UDD', university: 'UDD', cut: 650, weights: { nem: 25, ranking: 25, clec: 25, m1: 15, m2: 0, cie: 0, hcs: 10 } },
-                 { name: 'Ingeniería Comercial UAI', university: 'UAI', cut: 700, weights: { nem: 20, ranking: 40, clec: 10, m1: 30, m2: 0, cie: 0, hcs: 0 } },
+                { name: 'Ingeniería Comercial UAI', university: 'UAI', cut: 700, weights: { nem: 20, ranking: 40, clec: 10, m1: 30, m2: 0, cie: 0, hcs: 0 } },
             ];
 
             // --- ELEMENTOS DEL DOM ---
@@ -168,11 +188,11 @@
             };
 
             const pondEls = {
-                clec: document.querySelector('#pond-clec strong'),
-                m1: document.querySelector('#pond-m1 strong'),
-                m2: document.querySelector('#pond-m2 strong'),
-                cie: document.querySelector('#pond-cie strong'),
-                hcs: document.querySelector('#pond-hcs strong'),
+                clec: document.querySelector('#pond-clec span'),
+                m1: document.querySelector('#pond-m1 span'),
+                m2: document.querySelector('#pond-m2 span'),
+                cie: document.querySelector('#pond-cie span'),
+                hcs: document.querySelector('#pond-hcs span'),
             };
             
             const resultsEls = {
@@ -189,7 +209,6 @@
             // Función para actualizar todos los cálculos
             function updateCalculations() {
                 // Placeholder para las funciones de cálculo reales
-                // Estas funciones las reemplazarás con las fórmulas que me darás.
                 
                 // 1. Calcular NEM y Ranking
                 const nems = nemInputs.map(input => parseFloat(input.value)).filter(v => !isNaN(v) && v >= 1.0 && v <= 7.0);
@@ -249,13 +268,11 @@
             // --- FUNCIONES DE CÁLCULO (PLACEHOLDERS) ---
             // Reemplazar con las fórmulas correctas más adelante
             function calculateNemScore(promedio) {
-                // Fórmula de ejemplo, NO ES LA REAL.
                 if (!promedio) return 0;
                 return Math.round(250 + (promedio - 4.0) * 100);
             }
 
             function calculateRankingScore(promedio) {
-                // Fórmula de ejemplo, NO ES LA REAL.
                 if (!promedio) return 0;
                 return Math.round(300 + (promedio - 4.0) * 110);
             }
@@ -303,12 +320,10 @@
 
             // --- MANEJO DE EVENTOS ---
 
-            // Eventos para inputs de NEM y PAES
             [...nemInputs, ...Object.values(paesInputs)].forEach(input => {
                 input.addEventListener('input', updateCalculations);
             });
 
-            // Lógica de autocompletado para carreras
             careerInput.addEventListener('input', () => {
                 const query = careerInput.value.toLowerCase();
                 if (query.length < 2) {
@@ -332,14 +347,12 @@
                 careerList.classList.remove('hidden');
             });
             
-            // Ocultar lista de carreras si se hace clic fuera
             document.addEventListener('click', (e) => {
                 if (!careerInput.contains(e.target) && !careerList.contains(e.target)) {
                     careerList.classList.add('hidden');
                 }
             });
 
-            // Actualizar UI de ponderaciones
             function updatePonderacionesUI(weights) {
                 pondEls.clec.textContent = weights.clec + '%';
                 pondEls.m1.textContent = weights.m1 + '%';
