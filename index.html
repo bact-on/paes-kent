@@ -9,39 +9,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Estilos personalizados y para la fuente Poppins */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #fafcff;
-        }
-        /* Estilo para los placeholders de los inputs */
-        ::placeholder {
-            color: #A0AEC0;
-        }
-        /* Estilos para la lista de autocompletado */
-        #career-list {
-            position: absolute;
-            background-color: white;
-            border: 1px solid #E2E8F0;
-            border-radius: 0.5rem;
-            width: 100%;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 10;
-            margin-top: 0.25rem;
-        }
-        #career-list div {
-            padding: 0.75rem;
-            cursor: pointer;
-        }
-        #career-list div:hover {
-            background-color: #F1F5F9;
-        }
-        /* Ocultar la lista por defecto */
-        .hidden {
-            display: none;
-        }
-        /* Colores personalizados */
+        body { font-family: 'Poppins', sans-serif; background-color: #fafcff; }
+        ::placeholder { color: #A0AEC0; }
+        #career-list { position: absolute; background-color: white; border: 1px solid #E2E8F0; border-radius: 0.5rem; width: 100%; max-height: 150px; overflow-y: auto; z-index: 10; margin-top: 0.25rem; }
+        #career-list div { padding: 0.75rem; cursor: pointer; }
+        #career-list div:hover { background-color: #F1F5F9; }
+        .hidden { display: none; }
         .accent-text { color: #015ad6; }
         .accent-bg { background-color: #015ad6; }
         .accent-ring:focus { ring-color: #015ad6; }
@@ -50,7 +23,6 @@
         .cie-bg { background-color: #009f58; }
         .hcs-bg { background-color: #5e17eb; }
         .m2-bg { background-color: #1287d1; }
-
         .clec-bg-light { background-color: rgba(235, 45, 50, 0.1); }
         .clec-text-dark { color: #9b1c20; }
         .m1-bg-light { background-color: rgba(1, 90, 214, 0.1); }
@@ -67,7 +39,6 @@
 
     <div class="container mx-auto max-w-lg p-6 space-y-8">
 
-        <!-- Título Principal -->
         <header class="text-center">
             <h1 class="text-4xl font-extrabold accent-text">Simulador PAES Kent</h1>
         </header>
@@ -98,8 +69,12 @@
                     <div class="flex-1 pr-4">
                         <h2 class="text-xl font-bold mb-4">2. Elige una carrera</h2>
                         <div class="relative">
-                            <input type="text" id="career-input" placeholder="Escribe aquí una carrera" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
+                            <input type="text" id="career-input" placeholder="Cargando carreras..." class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring" disabled>
                             <div id="career-list" class="hidden"></div>
+                        </div>
+                         <!-- Advertencia de Prueba Especial -->
+                        <div id="special-test-warning" class="hidden mt-2 text-center text-sm text-yellow-700 bg-yellow-100 p-2 rounded-lg">
+                            ⚠️ ¡Atención! Esta carrera considera una prueba especial.
                         </div>
                         <p class="text-xs text-gray-400 mt-2 text-center">Ues disponibles: PUC – UCH – UANDES – UDD – UAI – UDP – UNAB – USACH – MAYOR – FINIS – USS</p>
                     </div>
@@ -120,26 +95,11 @@
             <section id="paes-section">
                 <h2 class="text-xl font-bold mb-4">3. Ingresa puntajes PAES <span class="font-normal text-gray-500">(reales o imaginarios)</span></h2>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="clec-bg-light p-4 rounded-2xl text-center">
-                        <label for="paes-clec" class="font-bold clec-text-dark">C. LECTORA</label>
-                        <input type="number" id="paes-clec" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
-                    </div>
-                    <div class="m1-bg-light p-4 rounded-2xl text-center">
-                        <label for="paes-m1" class="font-bold m1-text-dark">MATEMÁTICA 1</label>
-                        <input type="number" id="paes-m1" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
-                    </div>
-                    <div class="cie-bg-light p-4 rounded-2xl text-center">
-                        <label for="paes-cie" class="font-bold cie-text-dark">CIENCIAS</label>
-                        <input type="number" id="paes-cie" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
-                    </div>
-                    <div class="hcs-bg-light p-4 rounded-2xl text-center">
-                        <label for="paes-hcs" class="font-bold hcs-text-dark">HISTORIA Y CS. SOC.</label>
-                        <input type="number" id="paes-hcs" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
-                    </div>
-                    <div class="m2-bg-light p-4 rounded-2xl text-center col-span-2">
-                        <label for="paes-m2" class="font-bold m2-text-dark">MATEMÁTICA 2</label>
-                        <input type="number" id="paes-m2" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
-                    </div>
+                    <div class="clec-bg-light p-4 rounded-2xl text-center"><label for="paes-clec" class="font-bold clec-text-dark">C. LECTORA</label><input type="number" id="paes-clec" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="..."></div>
+                    <div class="m1-bg-light p-4 rounded-2xl text-center"><label for="paes-m1" class="font-bold m1-text-dark">MATEMÁTICA 1</label><input type="number" id="paes-m1" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="..."></div>
+                    <div class="cie-bg-light p-4 rounded-2xl text-center"><label for="paes-cie" class="font-bold cie-text-dark">CIENCIAS</label><input type="number" id="paes-cie" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="..."></div>
+                    <div class="hcs-bg-light p-4 rounded-2xl text-center"><label for="paes-hcs" class="font-bold hcs-text-dark">HISTORIA Y CS. SOC.</label><input type="number" id="paes-hcs" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="..."></div>
+                    <div class="m2-bg-light p-4 rounded-2xl text-center col-span-2"><label for="paes-m2" class="font-bold m2-text-dark">MATEMÁTICA 2</label><input type="number" id="paes-m2" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="..."></div>
                 </div>
             </section>
 
@@ -154,71 +114,71 @@
                 </div>
             </section>
         </main>
-
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- BASE DE DATOS SIMULADA ---
-            // Aquí iría la lista de carreras que cargarás desde un CSV.
-            // Por ahora, usamos datos de ejemplo.
-            const careersData = [
-                { name: 'Ingeniería Civil PUC', university: 'PUC', cut: 780, weights: { nem: 10, ranking: 25, clec: 10, m1: 45, m2: 10, cie: 0, hcs: 0 } },
-                { name: 'Derecho UCH', university: 'UCH', cut: 720, weights: { nem: 20, ranking: 30, clec: 30, m1: 10, m2: 0, cie: 0, hcs: 10 } },
-                { name: 'Medicina UANDES', university: 'UANDES', cut: 810, weights: { nem: 10, ranking: 20, clec: 15, m1: 25, m2: 10, cie: 20, hcs: 0 } },
-                { name: 'Psicología UDD', university: 'UDD', cut: 650, weights: { nem: 25, ranking: 25, clec: 25, m1: 15, m2: 0, cie: 0, hcs: 10 } },
-                { name: 'Ingeniería Comercial UAI', university: 'UAI', cut: 700, weights: { nem: 20, ranking: 40, clec: 10, m1: 30, m2: 0, cie: 0, hcs: 0 } },
-            ];
+            let allCareers = [];
+            let selectedCareer = null;
 
             // --- ELEMENTOS DEL DOM ---
             const nemInputs = ['nem1', 'nem2', 'nem3', 'nem4'].map(id => document.getElementById(id));
             const nemError = document.getElementById('nem-error');
             const nemResultEl = document.getElementById('nem-result');
             const rankingResultEl = document.getElementById('ranking-result');
-
             const careerInput = document.getElementById('career-input');
             const careerList = document.getElementById('career-list');
+            const specialTestWarning = document.getElementById('special-test-warning');
+            const paesInputs = { clec: document.getElementById('paes-clec'), m1: document.getElementById('paes-m1'), m2: document.getElementById('paes-m2'), cie: document.getElementById('paes-cie'), hcs: document.getElementById('paes-hcs') };
+            const pondEls = { clec: document.querySelector('#pond-clec span'), m1: document.querySelector('#pond-m1 span'), m2: document.querySelector('#pond-m2 span'), cie: document.querySelector('#pond-cie span'), hcs: document.querySelector('#pond-hcs span') };
+            const resultsEls = { cut: document.getElementById('corte-result'), ponderado: document.getElementById('ponderado-result'), promedioNem: document.getElementById('promedio-paes-nem-result'), promedioResto: document.getElementById('promedio-paes-resto-result') };
 
-            const paesInputs = {
-                clec: document.getElementById('paes-clec'),
-                m1: document.getElementById('paes-m1'),
-                m2: document.getElementById('paes-m2'),
-                cie: document.getElementById('paes-cie'),
-                hcs: document.getElementById('paes-hcs'),
-            };
+            // --- CARGA DE DATOS ---
+            async function loadCareerData() {
+                try {
+                    // Fetch el archivo JSON. Asegúrate que 'carreras.json' está en la misma carpeta.
+                    const response = await fetch('./carreras.json');
+                    if (!response.ok) {
+                        throw new Error(`Error al cargar el archivo: ${response.statusText}`);
+                    }
+                    const rawData = await response.json();
+                    
+                    // Mapear los datos del JSON al formato que usa la app
+                    allCareers = rawData.map(c => ({
+                        id: c.COD,
+                        name: c.NOMBRE,
+                        cut: parseInt(c.PUM, 10) || 0,
+                        specialTest: c.PE,
+                        weights: {
+                            nem: parseInt(c.NEM, 10) || 0,
+                            ranking: parseInt(c.RKG, 10) || 0,
+                            clec: parseInt(c.CLEC, 10) || 0,
+                            m1: parseInt(c.CMAT1, 10) || 0,
+                            hcs: parseInt(c.HCS, 10) || 0,
+                            cie: parseInt(c.CIE, 10) || 0,
+                            m2: parseInt(c.CMAT2, 10) || 0
+                        }
+                    }));
+                    
+                    careerInput.disabled = false;
+                    careerInput.placeholder = "Escribe aquí una carrera";
 
-            const pondEls = {
-                clec: document.querySelector('#pond-clec span'),
-                m1: document.querySelector('#pond-m1 span'),
-                m2: document.querySelector('#pond-m2 span'),
-                cie: document.querySelector('#pond-cie span'),
-                hcs: document.querySelector('#pond-hcs span'),
-            };
-            
-            const resultsEls = {
-                cut: document.getElementById('corte-result'),
-                ponderado: document.getElementById('ponderado-result'),
-                promedioNem: document.getElementById('promedio-paes-nem-result'),
-                promedioResto: document.getElementById('promedio-paes-resto-result'),
+                } catch (error) {
+                    console.error("No se pudo cargar la lista de carreras:", error);
+                    careerInput.placeholder = "Error al cargar carreras";
+                    // Podrías mostrar un mensaje de error más visible al usuario aquí
+                }
             }
 
-            let selectedCareer = null;
-
             // --- LÓGICA DE LA APLICACIÓN ---
-
-            // Función para actualizar todos los cálculos
             function updateCalculations() {
-                // Placeholder para las funciones de cálculo reales
-                
-                // 1. Calcular NEM y Ranking
+                // (El resto de la lógica de cálculo permanece igual)
                 const nems = nemInputs.map(input => parseFloat(input.value)).filter(v => !isNaN(v) && v >= 1.0 && v <= 7.0);
                 if (nems.length > 0 && nems.every(n => n >= 1.0 && n <= 7.0)) {
                     nemError.classList.add('hidden');
                     const promedioNEM = nems.reduce((a, b) => a + b, 0) / nems.length;
-                    const puntajeNEM = calculateNemScore(promedioNEM); // Placeholder
-                    const puntajeRanking = calculateRankingScore(promedioNEM); // Placeholder
-                    nemResultEl.textContent = puntajeNEM;
-                    rankingResultEl.textContent = puntajeRanking;
+                    nemResultEl.textContent = calculateNemScore(promedioNEM);
+                    rankingResultEl.textContent = calculateRankingScore(promedioNEM);
                 } else if (nemInputs.some(i => i.value !== '')) {
                      nemError.classList.remove('hidden');
                      nemResultEl.textContent = '...';
@@ -227,7 +187,6 @@
                     nemError.classList.add('hidden');
                 }
 
-
                 if (!selectedCareer) {
                     resetResults();
                     return;
@@ -235,7 +194,6 @@
                 
                 resultsEls.cut.textContent = selectedCareer.cut;
 
-                // 2. Calcular puntaje ponderado actual
                 const scores = {
                     nem: parseFloat(nemResultEl.textContent) || 0,
                     ranking: parseFloat(rankingResultEl.textContent) || 0,
@@ -249,11 +207,9 @@
                 const weightedScore = calculateWeightedScore(scores, selectedCareer.weights);
                 resultsEls.ponderado.textContent = weightedScore.toFixed(2);
                 
-                // 3. Calcular promedio necesario (solo con NEM/Ranking)
                 const neededForCutWithNem = calculateNeededAverage(selectedCareer.cut, scores.nem, scores.ranking, selectedCareer.weights);
                 resultsEls.promedioNem.textContent = neededForCutWithNem;
                 
-                // 4. Calcular promedio necesario para el resto de pruebas
                 const neededForCutWithPaes = calculateNeededAverageWithPaes(selectedCareer.cut, scores, selectedCareer.weights);
                 resultsEls.promedioResto.textContent = neededForCutWithPaes;
             }
@@ -266,17 +222,8 @@
             }
 
             // --- FUNCIONES DE CÁLCULO (PLACEHOLDERS) ---
-            // Reemplazar con las fórmulas correctas más adelante
-            function calculateNemScore(promedio) {
-                if (!promedio) return 0;
-                return Math.round(250 + (promedio - 4.0) * 100);
-            }
-
-            function calculateRankingScore(promedio) {
-                if (!promedio) return 0;
-                return Math.round(300 + (promedio - 4.0) * 110);
-            }
-
+            function calculateNemScore(promedio) { if (!promedio) return 0; return Math.round(250 + (promedio - 4.0) * 100); }
+            function calculateRankingScore(promedio) { if (!promedio) return 0; return Math.round(300 + (promedio - 4.0) * 110); }
             function calculateWeightedScore(scores, weights) {
                 let totalScore = 0;
                 totalScore += (scores.nem * weights.nem) / 100;
@@ -288,7 +235,6 @@
                 totalScore += (scores.hcs * weights.hcs) / 100;
                 return totalScore;
             }
-            
             function calculateNeededAverage(cutScore, nemScore, rankingScore, weights) {
                  const nemPonderado = (nemScore * weights.nem) / 100;
                  const rankingPonderado = (rankingScore * weights.ranking) / 100;
@@ -298,31 +244,23 @@
                  const promedioNecesario = (puntajeFaltante * 100) / ponderacionPaesTotal;
                  return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2);
             }
-            
             function calculateNeededAverageWithPaes(cutScore, scores, weights) {
                 const puntajeActual = calculateWeightedScore(scores, weights);
                 const puntajeFaltante = cutScore - puntajeActual;
-                
                 let ponderacionRestante = 0;
                 if (!scores.clec && weights.clec > 0) ponderacionRestante += weights.clec;
                 if (!scores.m1 && weights.m1 > 0) ponderacionRestante += weights.m1;
                 if (!scores.m2 && weights.m2 > 0) ponderacionRestante += weights.m2;
                 if (!scores.cie && weights.cie > 0) ponderacionRestante += weights.cie;
                 if (!scores.hcs && weights.hcs > 0) ponderacionRestante += weights.hcs;
-
                 if (puntajeFaltante <= 0) return '¡Ya superaste el corte!';
                 if (ponderacionRestante === 0) return 'N/A';
-                
                 const promedioNecesario = (puntajeFaltante * 100) / ponderacionRestante;
                 return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2);
             }
 
-
             // --- MANEJO DE EVENTOS ---
-
-            [...nemInputs, ...Object.values(paesInputs)].forEach(input => {
-                input.addEventListener('input', updateCalculations);
-            });
+            [...nemInputs, ...Object.values(paesInputs)].forEach(input => input.addEventListener('input', updateCalculations));
 
             careerInput.addEventListener('input', () => {
                 const query = careerInput.value.toLowerCase();
@@ -330,15 +268,21 @@
                     careerList.classList.add('hidden');
                     return;
                 }
-                const filteredCareers = careersData.filter(c => c.name.toLowerCase().includes(query));
+                const filteredCareers = allCareers.filter(c => c.name.toLowerCase().includes(query));
                 careerList.innerHTML = '';
-                filteredCareers.forEach(career => {
+                filteredCareers.slice(0, 50).forEach(career => { // Limitar a 50 resultados para no sobrecargar
                     const div = document.createElement('div');
                     div.textContent = career.name;
                     div.addEventListener('click', () => {
                         careerInput.value = career.name;
                         careerList.classList.add('hidden');
                         selectedCareer = career;
+                        // Mostrar advertencia si hay prueba especial
+                        if (career.specialTest && career.specialTest !== "0") {
+                            specialTestWarning.classList.remove('hidden');
+                        } else {
+                            specialTestWarning.classList.add('hidden');
+                        }
                         updatePonderacionesUI(career.weights);
                         updateCalculations();
                     });
@@ -360,6 +304,9 @@
                 pondEls.cie.textContent = weights.cie + '%';
                 pondEls.hcs.textContent = weights.hcs + '%';
             }
+
+            // Iniciar la carga de datos al cargar la página
+            loadCareerData();
         });
     </script>
 </body>
