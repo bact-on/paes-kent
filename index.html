@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador PAES Kent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos personalizados y para la fuente Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7FC;
+        }
+        /* Estilo para los placeholders de los inputs */
+        ::placeholder {
+            color: #A0AEC0;
+        }
+        /* Estilos para la lista de autocompletado */
+        #career-list {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.5rem;
+            width: 100%;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 10;
+            margin-top: 0.25rem;
+        }
+        #career-list div {
+            padding: 0.75rem;
+            cursor: pointer;
+        }
+        #career-list div:hover {
+            background-color: #F1F5F9;
+        }
+        /* Ocultar la lista por defecto */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto max-w-lg p-6 space-y-8">
+
+        <!-- Título Principal -->
+        <header class="text-center">
+            <h1 class="text-4xl font-extrabold text-pink-500">Simulador PAES Kent</h1>
+        </header>
+
+        <main class="space-y-10">
+            <!-- Sección 1: Promedios NEM -->
+            <section id="nem-section">
+                <h2 class="text-xl font-bold mb-4">1. Ingresa tus promedios <span class="font-normal text-gray-500">(reales o imaginarios)</span></h2>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <input type="number" id="nem1" placeholder="I° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-pink-400 focus:outline-none">
+                    <input type="number" id="nem2" placeholder="II° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-pink-400 focus:outline-none">
+                    <input type="number" id="nem3" placeholder="III° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-pink-400 focus:outline-none">
+                    <input type="number" id="nem4" placeholder="IV° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-pink-400 focus:outline-none">
+                </div>
+                <div id="nem-error" class="text-red-500 text-sm text-center mb-4 hidden">
+                    <span class="font-bold">▲</span> Entrada inválida
+                </div>
+                <div class="text-center text-gray-600">
+                    <p>Según lo ingresado, tu NEM sería de <strong id="nem-result" class="text-pink-500">...</strong> puntos*</p>
+                    <p>Y tu Ranking sería de <strong id="ranking-result" class="text-pink-500">...</strong> puntos*</p>
+                    <p class="text-xs text-gray-400 mt-2">*Datos para la generación que egresa el 2025.</p>
+                </div>
+            </section>
+
+            <!-- Sección 2: Selección de Carrera -->
+            <section id="career-section">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1 pr-4">
+                        <h2 class="text-xl font-bold mb-4">2. Elige una carrera</h2>
+                        <div class="relative">
+                            <input type="text" id="career-input" placeholder="Escribe aquí una carrera" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                            <div id="career-list" class="hidden"></div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2 text-center">Ues disponibles: PUC – UCH – UANDES – UDD – UAI – UDP – UNAB – USACH – MAYOR – FINIS – USS</p>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-lg font-bold mb-2">Ponderaciones</h3>
+                        <div class="grid grid-cols-2 gap-2 text-white text-sm">
+                            <div id="pond-clec" class="p-3 bg-red-500 rounded-lg shadow">C.LEC<br><strong class="text-xl">...</strong></div>
+                            <div id="pond-m1" class="p-3 bg-blue-500 rounded-lg shadow">M1<br><strong class="text-xl">...</strong></div>
+                            <div id="pond-cie" class="p-3 bg-green-500 rounded-lg shadow">CIE<br><strong class="text-xl">...</strong></div>
+                            <div id="pond-hcs" class="p-3 bg-purple-500 rounded-lg shadow">HCS<br><strong class="text-xl">...</strong></div>
+                            <div id="pond-m2" class="p-3 bg-cyan-500 rounded-lg shadow col-span-2">M2<br><strong class="text-xl">...</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección 3: Puntajes PAES -->
+            <section id="paes-section">
+                <h2 class="text-xl font-bold mb-4">3. Ingresa puntajes PAES <span class="font-normal text-gray-500">(reales o imaginarios)</span></h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-pink-100 p-4 rounded-2xl text-center">
+                        <label for="paes-clec" class="font-bold text-pink-800">C. LECTORA</label>
+                        <input type="number" id="paes-clec" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
+                    </div>
+                    <div class="bg-blue-100 p-4 rounded-2xl text-center">
+                        <label for="paes-m1" class="font-bold text-blue-800">MATEMÁTICA 1</label>
+                        <input type="number" id="paes-m1" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
+                    </div>
+                     <div class="bg-cyan-100 p-4 rounded-2xl text-center">
+                        <label for="paes-m2" class="font-bold text-cyan-800">MATEMÁTICA 2</label>
+                        <input type="number" id="paes-m2" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
+                    </div>
+                    <div class="bg-green-100 p-4 rounded-2xl text-center">
+                        <label for="paes-cie" class="font-bold text-green-800">CIENCIAS</label>
+                        <input type="number" id="paes-cie" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
+                    </div>
+                    <div class="bg-purple-100 p-4 rounded-2xl text-center col-span-2">
+                        <label for="paes-hcs" class="font-bold text-purple-800">HISTORIA Y CS. SOC.</label>
+                        <input type="number" id="paes-hcs" class="w-full mt-2 p-2 text-center text-2xl font-bold bg-transparent focus:outline-none" placeholder="...">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección 4: Resultados -->
+            <section id="results-section" class="text-center bg-white p-6 rounded-2xl shadow-md">
+                <h2 class="text-2xl font-bold mb-4">Resultados de la Simulación</h2>
+                <div class="space-y-4 text-gray-700">
+                    <p>El último puntaje de corte para esta carrera fue de <strong id="corte-result" class="text-blue-600 text-lg">...</strong> puntos.</p>
+                    <p>Solo con lo que has ingresado, ponderarías <strong id="ponderado-result" class="text-blue-600 text-lg">...</strong> puntos.</p>
+                    <p>Considerando solo tu NEM y Ranking, tendrías que sacar en promedio <strong id="promedio-paes-nem-result" class="text-blue-600 text-lg">...</strong> puntos para superar el corte.</p>
+                    <p>Considerando los puntajes que ingresaste, tendrías que sacar en promedio <strong id="promedio-paes-resto-result" class="text-blue-600 text-lg">...</strong> puntos en el resto de pruebas para superar el corte.</p>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- BASE DE DATOS SIMULADA ---
+            // Aquí iría la lista de carreras que cargarás desde un CSV.
+            // Por ahora, usamos datos de ejemplo.
+            const careersData = [
+                { name: 'Ingeniería Civil PUC', university: 'PUC', cut: 780, weights: { nem: 10, ranking: 25, clec: 10, m1: 45, m2: 0, cie: 10, hcs: 0 } },
+                { name: 'Derecho UCH', university: 'UCH', cut: 720, weights: { nem: 20, ranking: 30, clec: 30, m1: 10, m2: 0, cie: 0, hcs: 10 } },
+                { name: 'Medicina UANDES', university: 'UANDES', cut: 810, weights: { nem: 10, ranking: 20, clec: 15, m1: 25, m2: 10, cie: 20, hcs: 0 } },
+                { name: 'Psicología UDD', university: 'UDD', cut: 650, weights: { nem: 25, ranking: 25, clec: 25, m1: 15, m2: 0, cie: 0, hcs: 10 } },
+                 { name: 'Ingeniería Comercial UAI', university: 'UAI', cut: 700, weights: { nem: 20, ranking: 40, clec: 10, m1: 30, m2: 0, cie: 0, hcs: 0 } },
+            ];
+
+            // --- ELEMENTOS DEL DOM ---
+            const nemInputs = ['nem1', 'nem2', 'nem3', 'nem4'].map(id => document.getElementById(id));
+            const nemError = document.getElementById('nem-error');
+            const nemResultEl = document.getElementById('nem-result');
+            const rankingResultEl = document.getElementById('ranking-result');
+
+            const careerInput = document.getElementById('career-input');
+            const careerList = document.getElementById('career-list');
+
+            const paesInputs = {
+                clec: document.getElementById('paes-clec'),
+                m1: document.getElementById('paes-m1'),
+                m2: document.getElementById('paes-m2'),
+                cie: document.getElementById('paes-cie'),
+                hcs: document.getElementById('paes-hcs'),
+            };
+
+            const pondEls = {
+                clec: document.querySelector('#pond-clec strong'),
+                m1: document.querySelector('#pond-m1 strong'),
+                m2: document.querySelector('#pond-m2 strong'),
+                cie: document.querySelector('#pond-cie strong'),
+                hcs: document.querySelector('#pond-hcs strong'),
+            };
+            
+            const resultsEls = {
+                cut: document.getElementById('corte-result'),
+                ponderado: document.getElementById('ponderado-result'),
+                promedioNem: document.getElementById('promedio-paes-nem-result'),
+                promedioResto: document.getElementById('promedio-paes-resto-result'),
+            }
+
+            let selectedCareer = null;
+
+            // --- LÓGICA DE LA APLICACIÓN ---
+
+            // Función para actualizar todos los cálculos
+            function updateCalculations() {
+                // Placeholder para las funciones de cálculo reales
+                // Estas funciones las reemplazarás con las fórmulas que me darás.
+                
+                // 1. Calcular NEM y Ranking
+                const nems = nemInputs.map(input => parseFloat(input.value)).filter(v => !isNaN(v) && v >= 1.0 && v <= 7.0);
+                if (nems.length > 0 && nems.every(n => n >= 1.0 && n <= 7.0)) {
+                    nemError.classList.add('hidden');
+                    const promedioNEM = nems.reduce((a, b) => a + b, 0) / nems.length;
+                    const puntajeNEM = calculateNemScore(promedioNEM); // Placeholder
+                    const puntajeRanking = calculateRankingScore(promedioNEM); // Placeholder
+                    nemResultEl.textContent = puntajeNEM;
+                    rankingResultEl.textContent = puntajeRanking;
+                } else if (nemInputs.some(i => i.value !== '')) {
+                     nemError.classList.remove('hidden');
+                     nemResultEl.textContent = '...';
+                     rankingResultEl.textContent = '...';
+                } else {
+                    nemError.classList.add('hidden');
+                }
+
+
+                if (!selectedCareer) {
+                    resetResults();
+                    return;
+                }
+                
+                resultsEls.cut.textContent = selectedCareer.cut;
+
+                // 2. Calcular puntaje ponderado actual
+                const scores = {
+                    nem: parseFloat(nemResultEl.textContent) || 0,
+                    ranking: parseFloat(rankingResultEl.textContent) || 0,
+                    clec: parseFloat(paesInputs.clec.value) || 0,
+                    m1: parseFloat(paesInputs.m1.value) || 0,
+                    m2: parseFloat(paesInputs.m2.value) || 0,
+                    cie: parseFloat(paesInputs.cie.value) || 0,
+                    hcs: parseFloat(paesInputs.hcs.value) || 0,
+                };
+                
+                const weightedScore = calculateWeightedScore(scores, selectedCareer.weights);
+                resultsEls.ponderado.textContent = weightedScore.toFixed(2);
+                
+                // 3. Calcular promedio necesario (solo con NEM/Ranking)
+                const neededForCutWithNem = calculateNeededAverage(selectedCareer.cut, scores.nem, scores.ranking, selectedCareer.weights);
+                resultsEls.promedioNem.textContent = neededForCutWithNem;
+                
+                // 4. Calcular promedio necesario para el resto de pruebas
+                const neededForCutWithPaes = calculateNeededAverageWithPaes(selectedCareer.cut, scores, selectedCareer.weights);
+                resultsEls.promedioResto.textContent = neededForCutWithPaes;
+            }
+            
+            function resetResults() {
+                resultsEls.cut.textContent = '...';
+                resultsEls.ponderado.textContent = '...';
+                resultsEls.promedioNem.textContent = '...';
+                resultsEls.promedioResto.textContent = '...';
+            }
+
+            // --- FUNCIONES DE CÁLCULO (PLACEHOLDERS) ---
+            // Reemplazar con las fórmulas correctas más adelante
+            function calculateNemScore(promedio) {
+                // Fórmula de ejemplo, NO ES LA REAL.
+                if (!promedio) return 0;
+                return Math.round(250 + (promedio - 4.0) * 100);
+            }
+
+            function calculateRankingScore(promedio) {
+                // Fórmula de ejemplo, NO ES LA REAL.
+                if (!promedio) return 0;
+                return Math.round(300 + (promedio - 4.0) * 110);
+            }
+
+            function calculateWeightedScore(scores, weights) {
+                let totalScore = 0;
+                totalScore += (scores.nem * weights.nem) / 100;
+                totalScore += (scores.ranking * weights.ranking) / 100;
+                totalScore += (scores.clec * weights.clec) / 100;
+                totalScore += (scores.m1 * weights.m1) / 100;
+                totalScore += (scores.m2 * weights.m2) / 100;
+                totalScore += (scores.cie * weights.cie) / 100;
+                totalScore += (scores.hcs * weights.hcs) / 100;
+                return totalScore;
+            }
+            
+            function calculateNeededAverage(cutScore, nemScore, rankingScore, weights) {
+                 const nemPonderado = (nemScore * weights.nem) / 100;
+                 const rankingPonderado = (rankingScore * weights.ranking) / 100;
+                 const puntajeFaltante = cutScore - nemPonderado - rankingPonderado;
+                 const ponderacionPaesTotal = 100 - weights.nem - weights.ranking;
+                 if (ponderacionPaesTotal <= 0) return 'N/A';
+                 const promedioNecesario = (puntajeFaltante * 100) / ponderacionPaesTotal;
+                 return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2);
+            }
+            
+            function calculateNeededAverageWithPaes(cutScore, scores, weights) {
+                const puntajeActual = calculateWeightedScore(scores, weights);
+                const puntajeFaltante = cutScore - puntajeActual;
+                
+                let ponderacionRestante = 0;
+                if (!scores.clec && weights.clec > 0) ponderacionRestante += weights.clec;
+                if (!scores.m1 && weights.m1 > 0) ponderacionRestante += weights.m1;
+                if (!scores.m2 && weights.m2 > 0) ponderacionRestante += weights.m2;
+                if (!scores.cie && weights.cie > 0) ponderacionRestante += weights.cie;
+                if (!scores.hcs && weights.hcs > 0) ponderacionRestante += weights.hcs;
+
+                if (puntajeFaltante <= 0) return '¡Ya superaste el corte!';
+                if (ponderacionRestante === 0) return 'N/A';
+                
+                const promedioNecesario = (puntajeFaltante * 100) / ponderacionRestante;
+                return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2);
+            }
+
+
+            // --- MANEJO DE EVENTOS ---
+
+            // Eventos para inputs de NEM y PAES
+            [...nemInputs, ...Object.values(paesInputs)].forEach(input => {
+                input.addEventListener('input', updateCalculations);
+            });
+
+            // Lógica de autocompletado para carreras
+            careerInput.addEventListener('input', () => {
+                const query = careerInput.value.toLowerCase();
+                if (query.length < 2) {
+                    careerList.classList.add('hidden');
+                    return;
+                }
+                const filteredCareers = careersData.filter(c => c.name.toLowerCase().includes(query));
+                careerList.innerHTML = '';
+                filteredCareers.forEach(career => {
+                    const div = document.createElement('div');
+                    div.textContent = career.name;
+                    div.addEventListener('click', () => {
+                        careerInput.value = career.name;
+                        careerList.classList.add('hidden');
+                        selectedCareer = career;
+                        updatePonderacionesUI(career.weights);
+                        updateCalculations();
+                    });
+                    careerList.appendChild(div);
+                });
+                careerList.classList.remove('hidden');
+            });
+            
+            // Ocultar lista de carreras si se hace clic fuera
+            document.addEventListener('click', (e) => {
+                if (!careerInput.contains(e.target) && !careerList.contains(e.target)) {
+                    careerList.classList.add('hidden');
+                }
+            });
+
+            // Actualizar UI de ponderaciones
+            function updatePonderacionesUI(weights) {
+                pondEls.clec.textContent = weights.clec + '%';
+                pondEls.m1.textContent = weights.m1 + '%';
+                pondEls.m2.textContent = weights.m2 + '%';
+                pondEls.cie.textContent = weights.cie + '%';
+                pondEls.hcs.textContent = weights.hcs + '%';
+            }
+        });
+    </script>
+</body>
+</html>
