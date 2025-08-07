@@ -128,6 +128,11 @@
                 pendienteRkg: 0  // Se calculará después de cargar la tabla
             };
 
+            const inputs = document.querySelectorAll('input');
+                inputs.forEach(input => {
+                input.value = '';
+            });
+            
             // --- ELEMENTOS DEL DOM ---
             const nemInputs = ['nem1', 'nem2', 'nem3', 'nem4'].map(id => document.getElementById(id));
             const nemError = document.getElementById('nem-error');
