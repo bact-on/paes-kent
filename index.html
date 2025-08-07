@@ -268,8 +268,20 @@
             
             function calculateWeightedScore(scores, weights) {
                 let totalScore = 0;
-                for (const key in scores) {
-                    if (weights[key]) totalScore += (scores[key] * weights[key]) / 100;
+                if (weights.nem) totalScore += (scores.nem * weights.nem) / 100;
+                if (weights.rkg) totalScore += (scores.rkg * weights.rkg) / 100;
+                if (weights.clec) totalScore += (scores.clec * weights.clec) / 100;
+                if (weights.m1) totalScore += (scores.m1 * weights.m1) / 100;
+                if (weights.m2) totalScore += (scores.nem * weights.m2) / 100;
+                if (weights.cie == weights.hcs) {
+                    if (scores.cie > scores.hcs) {
+                        if (weights.cie) totalScore += (scores.cie * weights.cie) / 100;
+                    } else {
+                        if (weights.hcs) totalScore += (scores.hcs * weights.hcs) / 100;
+                    }
+                } else {
+                    if (weights.cie) totalScore += (scores.cie * weights.cie) / 100;
+                    if (weights.hcs) totalScore += (scores.hcs * weights.hcs) / 100;
                 }
                 return totalScore;
             }
@@ -291,8 +303,12 @@
                 if (!scores.clec && weights.clec > 0) ponderacionRestante += weights.clec;
                 if (!scores.m1 && weights.m1 > 0) ponderacionRestante += weights.m1;
                 if (!scores.m2 && weights.m2 > 0) ponderacionRestante += weights.m2;
-                if (!scores.cie && weights.cie > 0) ponderacionRestante += weights.cie;
-                if (!scores.hcs && weights.hcs > 0) ponderacionRestante += weights.hcs;
+                if (weights.cie == weights.hcs) {
+                    if (!scores.cie && !scores.hcs) ponderacionRestante += weights.cie;
+                } else {
+                    if (!scores.cie && weights.cie > 0) ponderacionRestante += weights.cie;
+                    if (!scores.hcs && weights.hcs > 0) ponderacionRestante += weights.hcs;   
+                }
                 if (puntajeFaltante <= 0) return '¡Ya superaste el corte!';
                 if (ponderacionRestante === 0) return 'N/A';
                 const promedioNecesario = (puntajeFaltante * 100) / ponderacionRestante;
