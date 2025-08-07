@@ -172,17 +172,33 @@
 
             // --- LÓGICA DE LA APLICACIÓN ---
             function updateCalculations() {
-                // 1. Calcular NEM y Ranking
-                const nems = nemInputs.map(input => parseFloat(input.value)).filter(v => !isNaN(v) && v >= 1.0 && v <= 7.0);
-                if (nemInputs.some(i => i.value !== '') && (nems.length !== nemInputs.filter(i => i.value !== '').length)) {
-                    nemError.classList.remove('hidden');
+                // 1. Validar y Calcular NEM y Ranking
+                let invalidInput = false;
+                const nems = [];
+                
+                for (const input of nemInputs) {
+                    const value = input.value;
+                    if (value === '') continue; // Ignorar campos vacíos
+                
+                    const numValue = parseFloat(value.replace(',', '.'));
+    
+                    // Un input es inválido si no es un número o está fuera del rango 4.0 a 7.0
+                    if (isNaN(numValue) || numValue < 4.0 || numValue > 7.0) {
+                        invalidInput = true;
+                        break; 
+                    }
+                    nems.push(numValue);
+                }
+
+                nemError.classList.toggle('hidden', !invalidInput);
+
+                if (invalidInput) {
                     nemResultEl.textContent = '...';
                     rankingResultEl.textContent = '...';
                 } else {
-                    nemError.classList.add('hidden');
                     if (nems.length > 0) {
                         const sum = nems.reduce((a, b) => a + b, 0);
-                        const promedioNEM = parseFloat((sum / nems.length).toFixed(2)); // Redondeo a 2 decimales
+                        const promedioNEM = parseFloat((sum / nems.length).toFixed(2));
                         nemResultEl.textContent = calculateNemScore(promedioNEM);
                         rankingResultEl.textContent = calculateRankingScore(promedioNEM);
                     } else {
@@ -234,9 +250,22 @@
             
             function calculateRankingScore(promedio) {
                 if (!promedio || rankingConfig.pendienteRkg === 0) return 0;
+
+                // Si el promedio es mayor o igual al máximo histórico, el puntaje es 1000.
+                if (promedio >= rankingConfig.promMaxHist) {
+                    return 1000;
+                }
+    
+                // Si el promedio es menor al promedio histórico, el ranking es igual al NEM.
+                if (promedio < rankingConfig.promHist) {
+                    return calculateNemScore(promedio);
+                }
+
+                // Para el resto de los casos, se aplica la fórmula de la pendiente.
                 const rankingScore = 1000 - rankingConfig.pendienteRkg * (rankingConfig.promMaxHist - promedio);
                 return Math.round(rankingScore);
             }
+            
             function calculateWeightedScore(scores, weights) {
                 let totalScore = 0;
                 for (const key in scores) {
@@ -244,6 +273,7 @@
                 }
                 return totalScore;
             }
+            
             function calculateNeededAverage(cutScore, nemScore, rankingScore, weights) {
                  const nemPonderado = (nemScore * weights.nem) / 100;
                  const rankingPonderado = (rankingScore * weights.ranking) / 100;
@@ -253,6 +283,7 @@
                  const promedioNecesario = (puntajeFaltante * 100) / ponderacionPaesTotal;
                  return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2).replace('.', ',');
             }
+            
             function calculateNeededAverageWithPaes(cutScore, scores, weights) {
                 const puntajeActual = calculateWeightedScore(scores, weights);
                 const puntajeFaltante = cutScore - puntajeActual;
@@ -267,6 +298,7 @@
                 const promedioNecesario = (puntajeFaltante * 100) / ponderacionRestante;
                 return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2).replace('.', ',');
             }
+            
             function formatNeededScore(element, score) {
                 element.textContent = score;
                 if (score === "+1000") {
