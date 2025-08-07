@@ -150,7 +150,7 @@
                 const rawCareers = await careersResponse.json();
                 allCareers = rawCareers.map(c => ({
                     id: c.COD, name: c.NOMBRE, cut: parseFloat(c.PUM) || 0, specialTest: c.PE,
-                    weights: { nem: parseInt(c.NEM, 10) || 0, ranking: parseInt(c.RKG, 10) || 0, clec: parseInt(c.CLEC, 10) || 0, m1: parseInt(c.CMAT1, 10) || 0, hcs: parseInt(c.HCS, 10) || 0, cie: parseInt(c.CIE, 10) || 0, m2: parseInt(c.CMAT2, 10) || 0 }
+                    weights: { nem: parseInt(c.NEM, 10) || 0, rkg: parseInt(c.RKG, 10) || 0, clec: parseInt(c.CLEC, 10) || 0, m1: parseInt(c.CMAT1, 10) || 0, hcs: parseInt(c.HCS, 10) || 0, cie: parseInt(c.CIE, 10) || 0, m2: parseInt(c.CMAT2, 10) || 0 }
                 }));
         
                 // Procesar tabla NEM
@@ -216,7 +216,7 @@
 
                 const scores = {
                     nem: parseFloat(nemResultEl.textContent) || 0,
-                    ranking: parseFloat(rankingResultEl.textContent) || 0,
+                    rkg: parseFloat(rankingResultEl.textContent) || 0,
                     clec: parseFloat(paesInputs.clec.value) || 0,
                     m1: parseFloat(paesInputs.m1.value) || 0,
                     m2: parseFloat(paesInputs.m2.value) || 0,
@@ -228,7 +228,7 @@
                 resultsEls.ponderado.textContent = weightedScore.toFixed(2).replace('.', ',');
                 
                 // Calcular y formatear promedios necesarios
-                formatNeededScore(resultsEls.promedioNem, calculateNeededAverage(selectedCareer.cut, scores.nem, scores.ranking, selectedCareer.weights));
+                formatNeededScore(resultsEls.promedioNem, calculateNeededAverage(selectedCareer.cut, scores.nem, scores.rkg, selectedCareer.weights));
                 formatNeededScore(resultsEls.promedioResto, calculateNeededAverageWithPaes(selectedCareer.cut, scores, selectedCareer.weights));
             }
             
@@ -276,9 +276,9 @@
             
             function calculateNeededAverage(cutScore, nemScore, rankingScore, weights) {
                  const nemPonderado = (nemScore * weights.nem) / 100;
-                 const rankingPonderado = (rankingScore * weights.ranking) / 100;
+                 const rankingPonderado = (rankingScore * weights.rkg) / 100;
                  const puntajeFaltante = cutScore - nemPonderado - rankingPonderado;
-                 const ponderacionPaesTotal = 100 - weights.nem - weights.ranking;
+                 const ponderacionPaesTotal = 100 - weights.nem - weights.rkg;
                  if (ponderacionPaesTotal <= 0) return 'N/A';
                  const promedioNecesario = (puntajeFaltante * 100) / ponderacionPaesTotal;
                  return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2).replace('.', ',');
