@@ -274,13 +274,15 @@
             });
             
             careerInput.addEventListener('blur', () => {
-                if (selectedCareer) {
-                    careerInput.value = selectedCareer.name;
-                } else {
-                    careerInput.value = '';
-                }
-                careerList.classList.add('hidden');
-            });
+                setTimeout(() => {
+                    if (selectedCareer) {
+                        careerInput.value = selectedCareer.name;
+                    } else {
+                        careerInput.value = '';
+                    }
+            careerList.classList.add('hidden');
+    }, 100); // Un retraso de 200 milisegundos es suficiente.
+});
 
             function updatePonderacionesUI(weights) {
                 for (const key in pondEls) {
