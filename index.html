@@ -18,6 +18,8 @@
         .accent-text { color: #015ad6; }
         .accent-bg { background-color: #015ad6; }
         .accent-ring:focus { ring-color: #015ad6; }
+        .nem-bg { background-color: #f59e0b; } /* Amber 500 */
+        .rkg-bg { background-color: #84cc16; } /* Lime 500 */
         .clec-bg { background-color: #eb2d32; }
         .m1-bg { background-color: #015ad6; }
         .cie-bg { background-color: #009f58; }
@@ -33,6 +35,7 @@
         .hcs-text-dark { color: #4311a9; }
         .m2-bg-light { background-color: rgba(18, 135, 209, 0.1); }
         .m2-text-dark { color: #0c639c; }
+        .text-impossible { color: #eb2d32; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -53,9 +56,7 @@
                     <input type="number" id="nem3" placeholder="III° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
                     <input type="number" id="nem4" placeholder="IV° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
                 </div>
-                <div id="nem-error" class="text-red-500 text-sm text-center mb-4 hidden">
-                    <span class="font-bold">▲</span> Entrada inválida
-                </div>
+                <div id="nem-error" class="text-red-500 text-sm text-center mb-4 hidden"><span class="font-bold">▲</span> Entrada inválida</div>
                 <div class="text-center text-gray-600">
                     <p>Según lo ingresado, tu NEM sería de <strong id="nem-result" class="accent-text">...</strong> puntos*</p>
                     <p>Y tu Ranking sería de <strong id="ranking-result" class="accent-text">...</strong> puntos*</p>
@@ -63,31 +64,24 @@
                 </div>
             </section>
 
-            <!-- Sección 2: Selección de Carrera -->
+            <!-- Sección 2: Selección de Carrera y Ponderaciones -->
             <section id="career-section">
-                <div class="flex justify-between items-start">
-                    <div class="flex-1 pr-4">
-                        <h2 class="text-xl font-bold mb-4">2. Elige una carrera</h2>
-                        <div class="relative">
-                            <input type="text" id="career-input" placeholder="Cargando carreras..." class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring" disabled>
-                            <div id="career-list" class="hidden"></div>
-                        </div>
-                         <!-- Advertencia de Prueba Especial -->
-                        <div id="special-test-warning" class="hidden mt-2 text-center text-sm text-yellow-700 bg-yellow-100 p-2 rounded-lg">
-                            ⚠️ ¡Atención! Esta carrera considera una prueba especial.
-                        </div>
-                        <p class="text-xs text-gray-400 mt-2 text-center">Ues disponibles: PUC – UCH – UANDES – UDD – UAI – UDP – UNAB – USACH – MAYOR – FINIS – USS</p>
-                    </div>
-                    <div class="text-center">
-                        <h3 class="text-lg font-bold mb-2">Ponderaciones</h3>
-                        <div class="grid grid-cols-2 gap-2 text-white text-sm">
-                            <div id="pond-clec" class="p-3 clec-bg rounded-lg shadow"><strong class="font-bold">C.LEC</strong><br><span class="text-xl font-bold">...</span></div>
-                            <div id="pond-m1" class="p-3 m1-bg rounded-lg shadow"><strong class="font-bold">M1</strong><br><span class="text-xl font-bold">...</span></div>
-                            <div id="pond-cie" class="p-3 cie-bg rounded-lg shadow"><strong class="font-bold">CIE</strong><br><span class="text-xl font-bold">...</span></div>
-                            <div id="pond-hcs" class="p-3 hcs-bg rounded-lg shadow"><strong class="font-bold">HCS</strong><br><span class="text-xl font-bold">...</span></div>
-                            <div id="pond-m2" class="p-3 m2-bg rounded-lg shadow col-span-2"><strong class="font-bold">M2</strong><br><span class="text-xl font-bold">...</span></div>
-                        </div>
-                    </div>
+                <h2 class="text-xl font-bold mb-4">2. Elige una carrera</h2>
+                <div class="relative">
+                    <input type="text" id="career-input" placeholder="Cargando carreras..." class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring" disabled>
+                    <div id="career-list" class="hidden"></div>
+                </div>
+                <div id="special-test-warning" class="hidden mt-2 text-center text-sm text-yellow-700 bg-yellow-100 p-2 rounded-lg">⚠️ ¡Atención! Esta carrera considera una prueba especial.</div>
+                
+                <h3 class="text-lg font-bold mt-6 mb-2 text-center">Ponderaciones</h3>
+                <div class="flex flex-wrap justify-center gap-2 text-white text-xs text-center">
+                    <div class="p-2 nem-bg rounded-lg shadow flex-1 min-w-[60px]"><strong class="font-bold">NEM</strong><br><span id="pond-nem" class="text-lg font-bold">...</span></div>
+                    <div class="p-2 rkg-bg rounded-lg shadow flex-1 min-w-[60px]"><strong class="font-bold">RKG</strong><br><span id="pond-rkg" class="text-lg font-bold">...</span></div>
+                    <div class="p-2 clec-bg rounded-lg shadow flex-1 min-w-[60px]"><strong class="font-bold">C.LEC</strong><br><span id="pond-clec" class="text-lg font-bold">...</span></div>
+                    <div class="p-2 m1-bg rounded-lg shadow flex-1 min-w-[60px]"><strong class="font-bold">M1</strong><br><span id="pond-m1" class="text-lg font-bold">...</span></div>
+                    <div class="p-2 cie-bg rounded-lg shadow flex-1 min-w-[60px]"><strong class="font-bold">CIE</strong><br><span id="pond-cie" class="text-lg font-bold">...</span></div>
+                    <div class="p-2 hcs-bg rounded-lg shadow flex-1 min-w-[60px]"><strong class="font-bold">HCS</strong><br><span id="pond-hcs" class="text-lg font-bold">...</span></div>
+                    <div class="p-2 m2-bg rounded-lg shadow flex-1 min-w-[60px]"><strong class="font-bold">M2</strong><br><span id="pond-m2" class="text-lg font-bold">...</span></div>
                 </div>
             </section>
 
@@ -130,65 +124,50 @@
             const careerList = document.getElementById('career-list');
             const specialTestWarning = document.getElementById('special-test-warning');
             const paesInputs = { clec: document.getElementById('paes-clec'), m1: document.getElementById('paes-m1'), m2: document.getElementById('paes-m2'), cie: document.getElementById('paes-cie'), hcs: document.getElementById('paes-hcs') };
-            const pondEls = { clec: document.querySelector('#pond-clec span'), m1: document.querySelector('#pond-m1 span'), m2: document.querySelector('#pond-m2 span'), cie: document.querySelector('#pond-cie span'), hcs: document.querySelector('#pond-hcs span') };
+            const pondEls = { nem: document.getElementById('pond-nem'), rkg: document.getElementById('pond-rkg'), clec: document.getElementById('pond-clec'), m1: document.getElementById('pond-m1'), m2: document.getElementById('pond-m2'), cie: document.getElementById('pond-cie'), hcs: document.getElementById('pond-hcs') };
             const resultsEls = { cut: document.getElementById('corte-result'), ponderado: document.getElementById('ponderado-result'), promedioNem: document.getElementById('promedio-paes-nem-result'), promedioResto: document.getElementById('promedio-paes-resto-result') };
 
             // --- CARGA DE DATOS ---
             async function loadCareerData() {
                 try {
-                    // Fetch el archivo JSON. Asegúrate que 'carreras.json' está en la misma carpeta.
                     const response = await fetch('./carreras.json');
-                    if (!response.ok) {
-                        throw new Error(`Error al cargar el archivo: ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error(`Error al cargar: ${response.statusText}`);
                     const rawData = await response.json();
-                    
-                    // Mapear los datos del JSON al formato que usa la app
                     allCareers = rawData.map(c => ({
-                        id: c.COD,
-                        name: c.NOMBRE,
-                        cut: parseInt(c.PUM, 10) || 0,
-                        specialTest: c.PE,
-                        weights: {
-                            nem: parseInt(c.NEM, 10) || 0,
-                            ranking: parseInt(c.RKG, 10) || 0,
-                            clec: parseInt(c.CLEC, 10) || 0,
-                            m1: parseInt(c.CMAT1, 10) || 0,
-                            hcs: parseInt(c.HCS, 10) || 0,
-                            cie: parseInt(c.CIE, 10) || 0,
-                            m2: parseInt(c.CMAT2, 10) || 0
-                        }
+                        id: c.COD, name: c.NOMBRE, cut: parseFloat(c.PUM) || 0, specialTest: c.PE,
+                        weights: { nem: parseInt(c.NEM, 10) || 0, ranking: parseInt(c.RKG, 10) || 0, clec: parseInt(c.CLEC, 10) || 0, m1: parseInt(c.CMAT1, 10) || 0, hcs: parseInt(c.HCS, 10) || 0, cie: parseInt(c.CIE, 10) || 0, m2: parseInt(c.CMAT2, 10) || 0 }
                     }));
-                    
                     careerInput.disabled = false;
                     careerInput.placeholder = "Escribe aquí una carrera";
-
                 } catch (error) {
                     console.error("No se pudo cargar la lista de carreras:", error);
                     careerInput.placeholder = "Error al cargar carreras";
-                    // Podrías mostrar un mensaje de error más visible al usuario aquí
                 }
             }
 
             // --- LÓGICA DE LA APLICACIÓN ---
             function updateCalculations() {
-                // (El resto de la lógica de cálculo permanece igual)
+                // 1. Calcular NEM y Ranking
                 const nems = nemInputs.map(input => parseFloat(input.value)).filter(v => !isNaN(v) && v >= 1.0 && v <= 7.0);
-                if (nems.length > 0 && nems.every(n => n >= 1.0 && n <= 7.0)) {
-                    nemError.classList.add('hidden');
-                    const promedioNEM = nems.reduce((a, b) => a + b, 0) / nems.length;
-                    nemResultEl.textContent = calculateNemScore(promedioNEM);
-                    rankingResultEl.textContent = calculateRankingScore(promedioNEM);
-                } else if (nemInputs.some(i => i.value !== '')) {
-                     nemError.classList.remove('hidden');
-                     nemResultEl.textContent = '...';
-                     rankingResultEl.textContent = '...';
+                if (nemInputs.some(i => i.value !== '') && (nems.length !== nemInputs.filter(i => i.value !== '').length)) {
+                    nemError.classList.remove('hidden');
+                    nemResultEl.textContent = '...';
+                    rankingResultEl.textContent = '...';
                 } else {
                     nemError.classList.add('hidden');
+                    if (nems.length > 0) {
+                        const sum = nems.reduce((a, b) => a + b, 0);
+                        const promedioNEM = parseFloat((sum / nems.length).toFixed(2)); // Redondeo a 2 decimales
+                        nemResultEl.textContent = calculateNemScore(promedioNEM);
+                        rankingResultEl.textContent = calculateRankingScore(promedioNEM);
+                    } else {
+                        nemResultEl.textContent = '...';
+                        rankingResultEl.textContent = '...';
+                    }
                 }
 
                 if (!selectedCareer) {
-                    resetResults();
+                    resetResultsAndPonderations();
                     return;
                 }
                 
@@ -205,20 +184,20 @@
                 };
                 
                 const weightedScore = calculateWeightedScore(scores, selectedCareer.weights);
-                resultsEls.ponderado.textContent = weightedScore.toFixed(2);
+                resultsEls.ponderado.textContent = weightedScore.toFixed(2).replace('.', ',');
                 
-                const neededForCutWithNem = calculateNeededAverage(selectedCareer.cut, scores.nem, scores.ranking, selectedCareer.weights);
-                resultsEls.promedioNem.textContent = neededForCutWithNem;
-                
-                const neededForCutWithPaes = calculateNeededAverageWithPaes(selectedCareer.cut, scores, selectedCareer.weights);
-                resultsEls.promedioResto.textContent = neededForCutWithPaes;
+                // Calcular y formatear promedios necesarios
+                formatNeededScore(resultsEls.promedioNem, calculateNeededAverage(selectedCareer.cut, scores.nem, scores.ranking, selectedCareer.weights));
+                formatNeededScore(resultsEls.promedioResto, calculateNeededAverageWithPaes(selectedCareer.cut, scores, selectedCareer.weights));
             }
             
-            function resetResults() {
+            function resetResultsAndPonderations() {
                 resultsEls.cut.textContent = '...';
                 resultsEls.ponderado.textContent = '...';
                 resultsEls.promedioNem.textContent = '...';
                 resultsEls.promedioResto.textContent = '...';
+                Object.values(pondEls).forEach(el => el.textContent = '...');
+                specialTestWarning.classList.add('hidden');
             }
 
             // --- FUNCIONES DE CÁLCULO (PLACEHOLDERS) ---
@@ -226,13 +205,9 @@
             function calculateRankingScore(promedio) { if (!promedio) return 0; return Math.round(300 + (promedio - 4.0) * 110); }
             function calculateWeightedScore(scores, weights) {
                 let totalScore = 0;
-                totalScore += (scores.nem * weights.nem) / 100;
-                totalScore += (scores.ranking * weights.ranking) / 100;
-                totalScore += (scores.clec * weights.clec) / 100;
-                totalScore += (scores.m1 * weights.m1) / 100;
-                totalScore += (scores.m2 * weights.m2) / 100;
-                totalScore += (scores.cie * weights.cie) / 100;
-                totalScore += (scores.hcs * weights.hcs) / 100;
+                for (const key in scores) {
+                    if (weights[key]) totalScore += (scores[key] * weights[key]) / 100;
+                }
                 return totalScore;
             }
             function calculateNeededAverage(cutScore, nemScore, rankingScore, weights) {
@@ -242,7 +217,7 @@
                  const ponderacionPaesTotal = 100 - weights.nem - weights.ranking;
                  if (ponderacionPaesTotal <= 0) return 'N/A';
                  const promedioNecesario = (puntajeFaltante * 100) / ponderacionPaesTotal;
-                 return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2);
+                 return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2).replace('.', ',');
             }
             function calculateNeededAverageWithPaes(cutScore, scores, weights) {
                 const puntajeActual = calculateWeightedScore(scores, weights);
@@ -256,7 +231,15 @@
                 if (puntajeFaltante <= 0) return '¡Ya superaste el corte!';
                 if (ponderacionRestante === 0) return 'N/A';
                 const promedioNecesario = (puntajeFaltante * 100) / ponderacionRestante;
-                return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2);
+                return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2).replace('.', ',');
+            }
+            function formatNeededScore(element, score) {
+                element.textContent = score;
+                if (score === "+1000") {
+                    element.classList.add('text-impossible');
+                } else {
+                    element.classList.remove('text-impossible');
+                }
             }
 
             // --- MANEJO DE EVENTOS ---
@@ -264,25 +247,24 @@
 
             careerInput.addEventListener('input', () => {
                 const query = careerInput.value.toLowerCase();
+                if (query === '') {
+                    selectedCareer = null;
+                    updateCalculations();
+                }
                 if (query.length < 2) {
                     careerList.classList.add('hidden');
                     return;
                 }
                 const filteredCareers = allCareers.filter(c => c.name.toLowerCase().includes(query));
                 careerList.innerHTML = '';
-                filteredCareers.slice(0, 50).forEach(career => { // Limitar a 50 resultados para no sobrecargar
+                filteredCareers.slice(0, 50).forEach(career => {
                     const div = document.createElement('div');
                     div.textContent = career.name;
                     div.addEventListener('click', () => {
                         careerInput.value = career.name;
                         careerList.classList.add('hidden');
                         selectedCareer = career;
-                        // Mostrar advertencia si hay prueba especial
-                        if (career.specialTest && career.specialTest !== "0") {
-                            specialTestWarning.classList.remove('hidden');
-                        } else {
-                            specialTestWarning.classList.add('hidden');
-                        }
+                        specialTestWarning.classList.toggle('hidden', !career.specialTest || career.specialTest === "0");
                         updatePonderacionesUI(career.weights);
                         updateCalculations();
                     });
@@ -291,21 +273,21 @@
                 careerList.classList.remove('hidden');
             });
             
-            document.addEventListener('click', (e) => {
-                if (!careerInput.contains(e.target) && !careerList.contains(e.target)) {
-                    careerList.classList.add('hidden');
+            careerInput.addEventListener('blur', () => {
+                if (selectedCareer) {
+                    careerInput.value = selectedCareer.name;
+                } else {
+                    careerInput.value = '';
                 }
+                careerList.classList.add('hidden');
             });
 
             function updatePonderacionesUI(weights) {
-                pondEls.clec.textContent = weights.clec + '%';
-                pondEls.m1.textContent = weights.m1 + '%';
-                pondEls.m2.textContent = weights.m2 + '%';
-                pondEls.cie.textContent = weights.cie + '%';
-                pondEls.hcs.textContent = weights.hcs + '%';
+                for (const key in pondEls) {
+                    pondEls[key].textContent = (weights[key] || 0) + '%';
+                }
             }
 
-            // Iniciar la carga de datos al cargar la página
             loadCareerData();
         });
     </script>
