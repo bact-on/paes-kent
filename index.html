@@ -114,6 +114,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             let allCareers = [];
             let selectedCareer = null;
+            let nemTable = {};
+            const rankingConfig = {
+                promMaxHist: 6.96, // Ejemplo: Promedio máximo histórico
+                promHist: 6.45,    // Ejemplo: Promedio histórico del contexto educativo
+                promHistNEM: 0,    // Se calculará después de cargar la tabla
+                pendienteRkg: 0  // Se calculará después de cargar la tabla
+            };
 
             // --- ELEMENTOS DEL DOM ---
             const nemInputs = ['nem1', 'nem2', 'nem3', 'nem4'].map(id => document.getElementById(id));
@@ -128,20 +135,38 @@
             const resultsEls = { cut: document.getElementById('corte-result'), ponderado: document.getElementById('ponderado-result'), promedioNem: document.getElementById('promedio-paes-nem-result'), promedioResto: document.getElementById('promedio-paes-resto-result') };
 
             // --- CARGA DE DATOS ---
-            async function loadCareerData() {
+            async function initializeApp() {
                 try {
-                    const response = await fetch('./carreras.json');
-                    if (!response.ok) throw new Error(`Error al cargar: ${response.statusText}`);
-                    const rawData = await response.json();
-                    allCareers = rawData.map(c => ({
-                        id: c.COD, name: c.NOMBRE, cut: parseFloat(c.PUM) || 0, specialTest: c.PE,
-                        weights: { nem: parseInt(c.NEM, 10) || 0, ranking: parseInt(c.RKG, 10) || 0, clec: parseInt(c.CLEC, 10) || 0, m1: parseInt(c.CMAT1, 10) || 0, hcs: parseInt(c.HCS, 10) || 0, cie: parseInt(c.CIE, 10) || 0, m2: parseInt(c.CMAT2, 10) || 0 }
-                    }));
-                    careerInput.disabled = false;
-                    careerInput.placeholder = "Escribe aquí una carrera";
+                // Cargar ambos archivos de datos en paralelo
+                const [careersResponse, nemResponse] = await Promise.all([
+                    fetch('./carreras.json'),
+                    fetch('./nem.json')
+                ]);
+
+                if (!careersResponse.ok) throw new Error(`Error al cargar carreras: ${careersResponse.statusText}`);
+                if (!nemResponse.ok) throw new Error(`Error al cargar tabla NEM: ${nemResponse.statusText}`);
+
+                // Procesar datos de carreras
+                const rawCareers = await careersResponse.json();
+                allCareers = rawCareers.map(c => ({
+                    id: c.COD, name: c.NOMBRE, cut: parseFloat(c.PUM) || 0, specialTest: c.PE,
+                    weights: { nem: parseInt(c.NEM, 10) || 0, ranking: parseInt(c.RKG, 10) || 0, clec: parseInt(c.CLEC, 10) || 0, m1: parseInt(c.CMAT1, 10) || 0, hcs: parseInt(c.HCS, 10) || 0, cie: parseInt(c.CIE, 10) || 0, m2: parseInt(c.CMAT2, 10) || 0 }
+                }));
+        
+                // Procesar tabla NEM
+                nemTable = await nemResponse.json();
+
+                // Calcular constantes del Ranking una vez que la tabla NEM está cargada
+                rankingConfig.promHistNEM = calculateNemScore(rankingConfig.promHist);
+                rankingConfig.pendienteRkg = (1000 - rankingConfig.promHistNEM) / (rankingConfig.promMaxHist - rankingConfig.promHist);
+
+                // Habilitar la interfaz de usuario
+                careerInput.disabled = false;
+                careerInput.placeholder = "Escribe aquí una carrera";
+
                 } catch (error) {
-                    console.error("No se pudo cargar la lista de carreras:", error);
-                    careerInput.placeholder = "Error al cargar carreras";
+                    console.error("Error durante la inicialización:", error);
+                    careerInput.placeholder = "Error al cargar datos";
                 }
             }
 
@@ -201,8 +226,17 @@
             }
 
             // --- FUNCIONES DE CÁLCULO (PLACEHOLDERS) ---
-            function calculateNemScore(promedio) { if (!promedio) return 0; return Math.round(250 + (promedio - 4.0) * 100); }
-            function calculateRankingScore(promedio) { if (!promedio) return 0; return Math.round(300 + (promedio - 4.0) * 110); }
+            function calculateNemScore(promedio) {
+                if (!promedio || !Object.keys(nemTable).length) return 0;
+                const promedioKey = promedio.toFixed(2);
+                return nemTable[promedioKey] || 0; // Devuelve el puntaje o 0 si no se encuentra
+            }
+            
+            function calculateRankingScore(promedio) {
+                if (!promedio || rankingConfig.pendienteRkg === 0) return 0;
+                const rankingScore = 1000 - rankingConfig.pendienteRkg * (rankingConfig.promMaxHist - promedio);
+                return Math.round(rankingScore);
+            }
             function calculateWeightedScore(scores, weights) {
                 let totalScore = 0;
                 for (const key in scores) {
@@ -280,9 +314,9 @@
                     } else {
                         careerInput.value = '';
                     }
-            careerList.classList.add('hidden');
-    }, 100); // Un retraso de 200 milisegundos es suficiente.
-});
+                careerList.classList.add('hidden');
+                }, 100);
+            });
 
             function updatePonderacionesUI(weights) {
                 for (const key in pondEls) {
@@ -290,7 +324,7 @@
                 }
             }
 
-            loadCareerData();
+            initializeApp();
         });
     </script>
 </body>
