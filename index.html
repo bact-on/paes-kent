@@ -269,7 +269,15 @@
             function calculateWeightedScore(scores, weights) {
                 let totalScore = 0;
                 if (weights.nem) totalScore += (scores.nem * weights.nem) / 100;
+                console.log("NEM")
+                console.log(scores.nem)
+                console.log(weights.nem)
+                console.log(totalScore)
                 if (weights.rkg) totalScore += (scores.rkg * weights.rkg) / 100;
+                console.log("RKG")
+                console.log(scores.rkg)
+                console.log(weights.rkg)
+                console.log(totalScore)
                 if (weights.clec) totalScore += (scores.clec * weights.clec) / 100;
                 if (weights.m1) totalScore += (scores.m1 * weights.m1) / 100;
                 if (weights.m2) totalScore += (scores.nem * weights.m2) / 100;
