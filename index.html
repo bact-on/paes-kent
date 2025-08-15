@@ -194,6 +194,7 @@
                     if (value === '') continue; // Ignorar campos vacíos
                 
                     const numValue = parseFloat(value.replace(',', '.').replace(' ', ''));
+                    console.log(numValue)
     
                     // Un input es inválido si no es un número o está fuera del rango 4.0 a 7.0
                     if (isNaN(numValue) || numValue < 4.0 || numValue > 7.0) {
