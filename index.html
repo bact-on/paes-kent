@@ -57,10 +57,10 @@
             <section id="nem-section">
                 <h2 class="text-xl font-bold mb-4">1. Ingresa tus promedios <span class="font-normal text-gray-500">(reales o imaginarios, puedes dejar algunos en blanco)</span></h2>
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <input type="number" id="nem1" placeholder="I° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
-                    <input type="number" id="nem2" placeholder="II° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
-                    <input type="number" id="nem3" placeholder="III° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
-                    <input type="number" id="nem4" placeholder="IV° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
+                    <input type="text" id="nem1" placeholder="I° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
+                    <input type="text" id="nem2" placeholder="II° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
+                    <input type="text" id="nem3" placeholder="III° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
+                    <input type="text" id="nem4" placeholder="IV° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
                 </div>
                 <div id="nem-error" class="text-red-500 text-sm text-center mb-4 hidden"><span class="font-bold">▲</span> Entrada inválida</div>
                 <div class="text-center text-gray-600">
@@ -196,11 +196,13 @@
                     // Un input es inválido si no es un número o está fuera del rango 4.0 a 7.0
                     if (isNaN(numValue) || numValue < 4.0 || numValue > 7.0) {
                         invalidInput = true;
+                        console.log("Invalid input")
                         break; 
                     }
                     nems.push(numValue);
                 }
 
+                console.log(invalidInput)
                 nemError.classList.toggle('hidden', !invalidInput);
 
                 if (invalidInput) {
