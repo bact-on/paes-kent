@@ -186,9 +186,11 @@
                 // 1. Validar y Calcular NEM y Ranking
                 let invalidInput = false;
                 const nems = [];
-                
+
+                console.log(nemInputs)
                 for (const input of nemInputs) {
                     const value = input.value;
+                    console.log(value)
                     if (value === '') continue; // Ignorar campos vacíos
                 
                     const numValue = parseFloat(value.replace(',', '.').replace(' ', ''));
