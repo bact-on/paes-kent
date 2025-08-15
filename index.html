@@ -187,11 +187,17 @@
                 let invalidInput = false;
                 const nems = [];
 
+                const numberRegex = /^\s*(\d+([,.]\d*)?|\.\d+)\s*$/;
                 console.log(nemInputs)
                 for (const input of nemInputs) {
                     const value = input.value;
                     console.log(value)
                     if (value === '') continue; // Ignorar campos vacíos
+
+                    if (!numberRegex.test(value)) {
+                        invalidInput = true;
+                        break;
+                    }
                 
                     const numValue = parseFloat(value.replace(',', '.').replace(' ', ''));
                     console.log(numValue)
