@@ -210,6 +210,7 @@
                     }
                     numValue = (Math.trunc(numValue * 100) / 100).toFixed(2)
                     nems.push(numValue);
+                    console.log(nems)
                 }
 
                 console.log(invalidInput)
@@ -220,8 +221,11 @@
                     rankingResultEl.textContent = '...';
                 } else {
                     if (nems.length > 0) {
-                        const sum = nems.reduce((a, b) => a + b, 0);
-                        const promedioNEM = parseFloat((sum / nems.length).toFixed(2));
+                        console.log(nems)
+                        let sum = nems.reduce((a, b) => a + b, 0);
+                        let promedioNEM = parseFloat((sum / nems.length).toFixed(2));
+                        console.log(sum)
+                        console.log(promedioNEM)
                         nemResultEl.textContent = calculateNemScore(promedioNEM);
                         rankingResultEl.textContent = calculateRankingScore(promedioNEM);
                     } else {
