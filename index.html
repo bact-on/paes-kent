@@ -238,8 +238,12 @@
                     resetResultsAndPonderations();
                     return;
                 }
-                
-                resultsEls.cut.textContent = selectedCareer.cut;
+
+                if (selectedCareer.cut == 0) {
+                    resultsEls.cut.textContent = 'Sin información - Carrera nueva';
+                } else {
+                    resultsEls.cut.textContent = selectedCareer.cut;
+                }
 
                 const scores = {
                     nem: parseFloat(nemResultEl.textContent) || 0,
