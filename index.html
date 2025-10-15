@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador PAES Kent</title>
-    <link rel="icon" type="image/png" href="./favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="shortcut icon" href="./favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="PAES Kent" />
-    <link rel="manifest" href="./site.webmanifest" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,8 +18,8 @@
         .accent-text { color: #015ad6; }
         .accent-bg { background-color: #015ad6; }
         .accent-ring:focus { ring-color: #015ad6; }
-        .nem-bg { background-color: #f59e0b; } /* Amber 500 */
-        .rkg-bg { background-color: #84cc16; } /* Lime 500 */
+        .nem-bg { background-color: #f59e0b; }
+        .rkg-bg { background-color: #84cc16; }
         .clec-bg { background-color: #eb2d32; }
         .m1-bg { background-color: #015ad6; }
         .cie-bg { background-color: #009f58; }
@@ -42,6 +36,7 @@
         .m2-bg-light { background-color: rgba(18, 135, 209, 0.1); }
         .m2-text-dark { color: #0c639c; }
         .text-impossible { color: #eb2d32; }
+        .mc-accent-text { color: #ff0076; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -55,7 +50,7 @@
         <main class="space-y-10">
             <!-- Sección 1: Promedios NEM -->
             <section id="nem-section">
-                <h2 class="text-xl font-bold mb-4">1. Ingresa tus promedios <span class="font-normal text-gray-500">(reales o imaginarios, puedes dejar algunos en blanco)</span></h2>
+                <h2 class="text-xl font-bold mb-4">1. Ingresa tus promedios <span class="font-normal text-gray-500">(reales o imaginarios)</span></h2>
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <input type="text" id="nem1" placeholder="I° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
                     <input type="text" id="nem2" placeholder="II° Medio" class="w-full p-3 text-center bg-white border border-gray-200 rounded-full shadow-sm focus:ring-2 focus:outline-none accent-ring">
@@ -78,6 +73,14 @@
                     <div id="career-list" class="hidden"></div>
                 </div>
                 <div id="special-test-warning" class="hidden mt-2 text-center text-sm text-yellow-700 bg-yellow-100 p-2 rounded-lg">⚠️ ¡Atención! Esta carrera requiere una prueba especial.</div>
+                
+                <!-- NUEVO: Contenedor para el checkbox +MC -->
+                <div id="mc-checkbox-container" class="hidden mt-4 text-center">
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="mc-checkbox" class="form-checkbox h-5 w-5 rounded accent-bg" style="color: #015ad6;">
+                        <span class="ml-2 text-gray-700">Esta carrera ofrece cupos <strong class="font-bold mc-accent-text">+MC</strong>. ¿Deseas considerarlos?</span>
+                    </label>
+                </div>
                 
                 <h3 class="text-lg font-bold mt-6 mb-2 text-center">Ponderaciones</h3>
                 <div class="flex flex-wrap justify-center gap-2 text-white text-xs text-center">
@@ -110,14 +113,271 @@
                     <p>El último puntaje de corte para esta carrera fue de <strong id="corte-result" class="accent-text text-lg">...</strong> puntos.</p>
                     <p>Solo con lo que has ingresado, ponderarías <strong id="ponderado-result" class="accent-text text-lg">...</strong> puntos.</p>
                     <p>Considerando solo tu NEM y Ranking, tendrías que sacar en promedio <strong id="promedio-paes-nem-result" class="accent-text text-lg">...</strong> puntos para superar el corte.</p>
-                    <p>Considerando los puntajes que ingresaste, tendrías que sacar en promedio <strong id="promedio-paes-resto-result" class="accent-text text-lg">...</strong> puntos en el resto de pruebas para superar el corte.</p>
+                    <!-- MODIFICADO: Añadido span para la lista de pruebas -->
+                    <p>Considerando los puntajes que ingresaste <span id="entered-tests-list" class="text-gray-500 font-normal"></span>, tendrías que sacar en promedio <strong id="promedio-paes-resto-result" class="accent-text text-lg">...</strong> puntos en el resto de pruebas para superar el corte.</p>
                 </div>
             </section>
         </main>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded",(()=>{let e=[],t=null,n={};const c={promMaxHist:6.96,promHist:6.45,promHistNEM:0,pendienteRkg:0};document.querySelectorAll("input").forEach((e=>{e.value=""}));const o=["nem1","nem2","nem3","nem4"].map((e=>document.getElementById(e))),r=document.getElementById("nem-error"),s=document.getElementById("nem-result"),a=document.getElementById("ranking-result"),i=document.getElementById("career-input"),d=document.getElementById("career-list"),m=document.getElementById("special-test-warning"),l={clec:document.getElementById("paes-clec"),m1:document.getElementById("paes-m1"),m2:document.getElementById("paes-m2"),cie:document.getElementById("paes-cie"),hcs:document.getElementById("paes-hcs")},u={nem:document.getElementById("pond-nem"),rkg:document.getElementById("pond-rkg"),clec:document.getElementById("pond-clec"),m1:document.getElementById("pond-m1"),m2:document.getElementById("pond-m2"),cie:document.getElementById("pond-cie"),hcs:document.getElementById("pond-hcs")},p={cut:document.getElementById("corte-result"),ponderado:document.getElementById("ponderado-result"),promedioNem:document.getElementById("promedio-paes-nem-result"),promedioResto:document.getElementById("promedio-paes-resto-result")};function g(){let e=!1;const n=[],i=/^\s*(\d+([,.]\d*)?|\.\d+)\s*$/;for(const t of o){const c=t.value;if(""===c)continue;if(!i.test(c)){e=!0;break}let o=parseFloat(c.replace(",",".").replace(" ",""));if(isNaN(o)||o<4||o>7){e=!0;break}o=Math.trunc(100*o)/100,n.push(o)}if(r.classList.toggle("hidden",!e),e)s.textContent="...",a.textContent="...";else if(n.length>0){let e=n.reduce(((e,t)=>e+t),0),t=parseFloat((e/n.length).toFixed(2));s.textContent=h(t),a.textContent=function(e){if(!e||0===c.pendienteRkg)return 0;if(e>=c.promMaxHist)return 1e3;if(e<c.promHist)return h(e);const t=1e3-c.pendienteRkg*(c.promMaxHist-e);return Math.round(t)}(t)}else s.textContent="...",a.textContent="...";if(!t)return p.cut.textContent="...",p.ponderado.textContent="...",p.promedioNem.textContent="...",p.promedioResto.textContent="...",Object.values(u).forEach((e=>e.textContent="...")),void m.classList.add("hidden");0==t.cut?p.cut.textContent="Sin información - Carrera nueva":p.cut.textContent=t.cut;const d={nem:parseFloat(s.textContent)||0,rkg:parseFloat(a.textContent)||0,clec:parseFloat(l.clec.value)||0,m1:parseFloat(l.m1.value)||0,m2:parseFloat(l.m2.value)||0,cie:parseFloat(l.cie.value)||0,hcs:parseFloat(l.hcs.value)||0},g=E(d,t.weights);p.ponderado.textContent=g.toFixed(2).replace(".",","),f(p.promedioNem,function(e,t,n,c){const o=t*c.nem/100,r=n*c.rkg/100,s=e-o-r,a=100-c.nem-c.rkg;if(a<=0)return"N/A";const i=100*s/a;return i>1e3?"+1000":i.toFixed(2).replace(".",",")}(t.cut,d.nem,d.rkg,t.weights)),f(p.promedioResto,function(e,t,n){const c=E(t,n),o=e-c;let r=0;!t.clec&&n.clec>0&&(r+=n.clec);!t.m1&&n.m1>0&&(r+=n.m1);!t.m2&&n.m2>0&&(r+=n.m2);n.cie==n.hcs?t.cie||t.hcs||(r+=n.cie):(!t.cie&&n.cie>0&&(r+=n.cie),!t.hcs&&n.hcs>0&&(r+=n.hcs));if(o<=0)return"¡Ya superaste el corte!";if(0===r)return"N/A";const s=100*o/r;return s>1e3?"+1000":s.toFixed(2).replace(".",",")}(t.cut,d,t.weights))}function h(e){if(!e||!Object.keys(n).length)return 0;const t=e.toFixed(2);return n[t]||0}function E(e,t){let n=0;return t.nem&&(n+=e.nem*t.nem/100),t.rkg&&(n+=e.rkg*t.rkg/100),t.clec&&(n+=e.clec*t.clec/100),t.m1&&(n+=e.m1*t.m1/100),t.m2&&(n+=e.m2*t.m2/100),t.cie==t.hcs?e.cie>e.hcs?t.cie&&(n+=e.cie*t.cie/100):t.hcs&&(n+=e.hcs*t.hcs/100):(t.cie&&(n+=e.cie*t.cie/100),t.hcs&&(n+=e.hcs*t.hcs/100)),n}function f(e,t){e.textContent=t,"+1000"===t?e.classList.add("text-impossible"):e.classList.remove("text-impossible")}[...o,...Object.values(l)].forEach((e=>e.addEventListener("input",g))),i.addEventListener("input",(()=>{const n=i.value.toLowerCase();if(""===n&&(t=null,g()),n.length<2)return void d.classList.add("hidden");const c=e.filter((e=>e.name.toLowerCase().includes(n)));d.innerHTML="",c.slice(0,50).forEach((e=>{const n=document.createElement("div");n.textContent=e.name,n.addEventListener("click",(()=>{i.value=e.name,d.classList.add("hidden"),t=e,m.classList.toggle("hidden",!e.specialTest||"0"===e.specialTest),function(e){for(const t in u)u[t].textContent=(e[t]||0)+"%"}(e.weights),g()})),d.appendChild(n)})),d.classList.remove("hidden")})),i.addEventListener("blur",(()=>{setTimeout((()=>{i.value=t?t.name:"",d.classList.add("hidden")}),200)})),async function(){try{const[t,o]=await Promise.all([fetch("./carreras.json"),fetch("./nem.json")]);if(!t.ok)throw new Error("Error al cargar carreras: ${careersResponse.statusText}");if(!o.ok)throw new Error("Error al cargar tabla NEM: ${nemResponse.statusText}");const r=await t.json();e=r.map((e=>({id:e.COD,name:e.NOMBRE,cut:parseFloat(e.PUM)||0,specialTest:e.PE,weights:{nem:parseInt(e.NEM,10)||0,rkg:parseInt(e.RKG,10)||0,clec:parseInt(e.CLEC,10)||0,m1:parseInt(e.CMAT1,10)||0,hcs:parseInt(e.HCS,10)||0,cie:parseInt(e.CIE,10)||0,m2:parseInt(e.CMAT2,10)||0}}))),n=await o.json(),c.promHistNEM=h(c.promHist),c.pendienteRkg=(1e3-c.promHistNEM)/(c.promMaxHist-c.promHist),i.disabled=!1,i.placeholder="Escribe aquí una carrera"}catch(e){console.error("Error durante la inicialización:",e),i.placeholder="Error al cargar datos"}}()}));
+        document.addEventListener('DOMContentLoaded', () => {
+            let allCareers = [];
+            let selectedCareer = null;
+            let nemTable = {};
+            const rankingConfig = { promMaxHist: 6.96, promHist: 6.45, promHistNEM: 0, pendienteRkg: 0 };
+
+            // --- ELEMENTOS DEL DOM ---
+            const nemInputs = ['nem1', 'nem2', 'nem3', 'nem4'].map(id => document.getElementById(id));
+            const nemError = document.getElementById('nem-error');
+            const nemResultEl = document.getElementById('nem-result');
+            const rankingResultEl = document.getElementById('ranking-result');
+            const careerInput = document.getElementById('career-input');
+            const careerList = document.getElementById('career-list');
+            const specialTestWarning = document.getElementById('special-test-warning');
+            const mcCheckboxContainer = document.getElementById('mc-checkbox-container'); // NUEVO
+            const mcCheckbox = document.getElementById('mc-checkbox'); // NUEVO
+            const paesInputs = { clec: document.getElementById('paes-clec'), m1: document.getElementById('paes-m1'), m2: document.getElementById('paes-m2'), cie: document.getElementById('paes-cie'), hcs: document.getElementById('paes-hcs') };
+            const pondEls = { nem: document.getElementById('pond-nem'), rkg: document.getElementById('pond-rkg'), clec: document.getElementById('pond-clec'), m1: document.getElementById('pond-m1'), m2: document.getElementById('pond-m2'), cie: document.getElementById('pond-cie'), hcs: document.getElementById('pond-hcs') };
+            const resultsEls = { cut: document.getElementById('corte-result'), ponderado: document.getElementById('ponderado-result'), promedioNem: document.getElementById('promedio-paes-nem-result'), promedioResto: document.getElementById('promedio-paes-resto-result'), enteredTests: document.getElementById('entered-tests-list') }; // MODIFICADO
+
+            // --- CARGA DE DATOS ---
+            async function initializeApp() {
+                try {
+                    const [careersResponse, nemResponse] = await Promise.all([ fetch('./carreras.json'), fetch('./nem.json') ]);
+                    if (!careersResponse.ok) throw new Error(`Error al cargar carreras: ${careersResponse.statusText}`);
+                    if (!nemResponse.ok) throw new Error(`Error al cargar tabla NEM: ${nemResponse.statusText}`);
+
+                    const rawCareers = await careersResponse.json();
+                    allCareers = rawCareers.map(c => ({
+                        id: c.COD, name: c.NOMBRE, 
+                        cut: parseFloat(c.PUM) || 0,
+                        mcCut: parseFloat(c.MC) || 0, // NUEVO
+                        specialTest: c.PE,
+                        weights: { nem: parseInt(c.NEM, 10) || 0, rkg: parseInt(c.RKG, 10) || 0, clec: parseInt(c.CLEC, 10) || 0, m1: parseInt(c.CMAT1, 10) || 0, hcs: parseInt(c.HCS, 10) || 0, cie: parseInt(c.CIE, 10) || 0, m2: parseInt(c.CMAT2, 10) || 0 }
+                    }));
+                    
+                    nemTable = await nemResponse.json();
+                    rankingConfig.promHistNEM = calculateNemScore(rankingConfig.promHist);
+                    rankingConfig.pendienteRkg = (1000 - rankingConfig.promHistNEM) / (rankingConfig.promMaxHist - rankingConfig.promHist);
+
+                    careerInput.disabled = false;
+                    careerInput.placeholder = "Escribe aquí una carrera";
+                } catch (error) {
+                    console.error("Error durante la inicialización:", error);
+                    careerInput.placeholder = "Error al cargar datos";
+                }
+            }
+
+            // --- LÓGICA DE LA APLICACIÓN ---
+            function updateCalculations() {
+                // 1. Validar y Calcular NEM y Ranking
+                let invalidInput = false;
+                const nems = [];
+                for (const input of nemInputs) {
+                    const value = input.value;
+                    if (value === '') continue;
+                    const numValue = parseFloat(value.replace(',', '.'));
+                    if (isNaN(numValue) || numValue < 4.0 || numValue > 7.0) {
+                        invalidInput = true;
+                        break;
+                    }
+                    nems.push(numValue);
+                }
+                nemError.classList.toggle('hidden', !invalidInput);
+                if (invalidInput) {
+                    nemResultEl.textContent = '...';
+                    rankingResultEl.textContent = '...';
+                } else {
+                    if (nems.length > 0) {
+                        const sum = nems.reduce((a, b) => a + b, 0);
+                        const promedioNEM = parseFloat((sum / nems.length).toFixed(2));
+                        nemResultEl.textContent = calculateNemScore(promedioNEM);
+                        rankingResultEl.textContent = calculateRankingScore(promedioNEM);
+                    } else {
+                        nemResultEl.textContent = '...';
+                        rankingResultEl.textContent = '...';
+                    }
+                }
+
+                if (!selectedCareer) {
+                    resetResultsAndPonderations();
+                    return;
+                }
+                
+                // NUEVO: Determinar el puntaje de corte a usar
+                const useMcCut = mcCheckbox.checked && selectedCareer.mcCut > 0;
+                const currentCutScore = useMcCut ? selectedCareer.mcCut : selectedCareer.cut;
+
+                resultsEls.cut.textContent = currentCutScore || 'Sin info';
+
+                const scores = {
+                    nem: parseFloat(nemResultEl.textContent) || 0,
+                    rkg: parseFloat(rankingResultEl.textContent) || 0,
+                    clec: parseFloat(paesInputs.clec.value) || 0,
+                    m1: parseFloat(paesInputs.m1.value) || 0,
+                    m2: parseFloat(paesInputs.m2.value) || 0,
+                    cie: parseFloat(paesInputs.cie.value) || 0,
+                    hcs: parseFloat(paesInputs.hcs.value) || 0,
+                };
+                
+                const weightedScore = calculateWeightedScore(scores, selectedCareer.weights);
+                resultsEls.ponderado.textContent = weightedScore.toFixed(2).replace('.', ',');
+                
+                // Calcular y formatear promedios necesarios, pasando el corte actual
+                formatNeededScore(resultsEls.promedioNem, calculateNeededAverage(currentCutScore, scores.nem, scores.rkg, selectedCareer.weights));
+                
+                const neededWithPaesResult = calculateNeededAverageWithPaes(currentCutScore, scores, selectedCareer.weights);
+                formatNeededScore(resultsEls.promedioResto, neededWithPaesResult.average);
+                
+                // NUEVO: Actualizar la lista de pruebas ingresadas
+                resultsEls.enteredTests.textContent = neededWithPaesResult.tests ? `(${neededWithPaesResult.tests})` : '';
+            }
+            
+            function resetResultsAndPonderations() {
+                resultsEls.cut.textContent = '...';
+                resultsEls.ponderado.textContent = '...';
+                resultsEls.promedioNem.textContent = '...';
+                resultsEls.promedioResto.textContent = '...';
+                resultsEls.enteredTests.textContent = ''; // NUEVO
+                Object.values(pondEls).forEach(el => el.textContent = '...');
+                specialTestWarning.classList.add('hidden');
+                mcCheckboxContainer.classList.add('hidden'); // NUEVO
+                mcCheckbox.checked = false; // NUEVO
+            }
+
+            // --- FUNCIONES DE CÁLCULO ---
+            function calculateNemScore(promedio) {
+                if (!promedio || !Object.keys(nemTable).length) return 0;
+                return nemTable[promedio.toFixed(2)] || 0;
+            }
+            
+            function calculateRankingScore(promedio) {
+                if (!promedio || rankingConfig.pendienteRkg === 0) return 0;
+                if (promedio >= rankingConfig.promMaxHist) return 1000;
+                if (promedio < rankingConfig.promHist) return calculateNemScore(promedio);
+                return Math.round(1000 - rankingConfig.pendienteRkg * (rankingConfig.promMaxHist - promedio));
+            }
+            
+            function calculateWeightedScore(scores, weights) {
+                let totalScore = 0;
+                totalScore += (scores.nem * weights.nem) / 100 || 0;
+                totalScore += (scores.rkg * weights.rkg) / 100 || 0;
+                totalScore += (scores.clec * weights.clec) / 100 || 0;
+                totalScore += (scores.m1 * weights.m1) / 100 || 0;
+                totalScore += (scores.m2 * weights.m2) / 100 || 0;
+                
+                if (weights.cie === weights.hcs) {
+                    totalScore += (Math.max(scores.cie, scores.hcs) * weights.cie) / 100 || 0;
+                } else {
+                    totalScore += (scores.cie * weights.cie) / 100 || 0;
+                    totalScore += (scores.hcs * weights.hcs) / 100 || 0;
+                }
+                return totalScore;
+            }
+            
+            function calculateNeededAverage(cutScore, nemScore, rankingScore, weights) {
+                 const nemPonderado = (nemScore * weights.nem) / 100 || 0;
+                 const rankingPonderado = (rankingScore * weights.rkg) / 100 || 0;
+                 const puntajeFaltante = cutScore - nemPonderado - rankingPonderado;
+                 const ponderacionPaesTotal = 100 - (weights.nem || 0) - (weights.rkg || 0);
+                 if (ponderacionPaesTotal <= 0) return 'N/A';
+                 const promedioNecesario = (puntajeFaltante * 100) / ponderacionPaesTotal;
+                 return promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2).replace('.', ',');
+            }
+            
+            function calculateNeededAverageWithPaes(cutScore, scores, weights) {
+                const puntajeActual = calculateWeightedScore(scores, weights);
+                const puntajeFaltante = cutScore - puntajeActual;
+                
+                let ponderacionRestante = 0;
+                const enteredTests = [];
+                const testMap = { clec: 'C. Lec.', m1: 'M1', m2: 'M2', cie: 'Ciencias', hcs: 'Historia' };
+
+                const processTest = (testKey) => {
+                    if (weights[testKey] > 0) {
+                        if (!scores[testKey]) ponderacionRestante += weights[testKey];
+                        else enteredTests.push(testMap[testKey]);
+                    }
+                };
+
+                ['clec', 'm1', 'm2'].forEach(processTest);
+                
+                if (weights.cie === weights.hcs) {
+                    if (weights.cie > 0) {
+                        if (!scores.cie && !scores.hcs) ponderacionRestante += weights.cie;
+                        else enteredTests.push(scores.cie > scores.hcs ? testMap.cie : testMap.hcs);
+                    }
+                } else {
+                    processTest('cie');
+                    processTest('hcs');
+                }
+
+                const enteredTestsString = enteredTests.join(', ');
+
+                if (puntajeFaltante <= 0) return { average: '¡Ya superaste el corte!', tests: enteredTestsString };
+                if (ponderacionRestante <= 0) return { average: 'N/A', tests: enteredTestsString };
+                
+                const promedioNecesario = (puntajeFaltante * 100) / ponderacionRestante;
+                const resultAverage = promedioNecesario > 1000 ? "+1000" : promedioNecesario.toFixed(2).replace('.', ',');
+                
+                return { average: resultAverage, tests: enteredTestsString };
+            }
+            
+            function formatNeededScore(element, score) {
+                element.textContent = score;
+                element.classList.toggle('text-impossible', score === "+1000");
+            }
+
+            // --- MANEJO DE EVENTOS ---
+            [...nemInputs, ...Object.values(paesInputs)].forEach(input => input.addEventListener('input', updateCalculations));
+            mcCheckbox.addEventListener('change', updateCalculations); // NUEVO
+
+            careerInput.addEventListener('input', () => {
+                const query = careerInput.value.toLowerCase();
+                if (query === '') {
+                    selectedCareer = null;
+                    updateCalculations();
+                }
+                careerList.classList.toggle('hidden', query.length < 2);
+                if (query.length < 2) return;
+
+                const filteredCareers = allCareers.filter(c => c.name.toLowerCase().includes(query));
+                careerList.innerHTML = '';
+                filteredCareers.slice(0, 50).forEach(career => {
+                    const div = document.createElement('div');
+                    div.textContent = career.name;
+                    div.addEventListener('click', () => {
+                        careerInput.value = career.name;
+                        careerList.classList.add('hidden');
+                        selectedCareer = career;
+                        
+                        // Lógica para mostrar/ocultar advertencias y checkbox
+                        specialTestWarning.classList.toggle('hidden', !career.specialTest || career.specialTest === "0");
+                        mcCheckboxContainer.classList.toggle('hidden', !(career.mcCut > 0));
+                        mcCheckbox.checked = false; // Resetear el checkbox siempre
+
+                        updatePonderacionesUI(career.weights);
+                        updateCalculations();
+                    });
+                    careerList.appendChild(div);
+                });
+            });
+            
+            careerInput.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (selectedCareer) careerInput.value = selectedCareer.name;
+                    else careerInput.value = '';
+                    careerList.classList.add('hidden');
+                }, 200);
+            });
+
+            function updatePonderacionesUI(weights) {
+                for (const key in pondEls) pondEls[key].textContent = (weights[key] || 0) + '%';
+            }
+
+            initializeApp();
+        });
     </script>
 </body>
 </html>
